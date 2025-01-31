@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import '../theme/auth_theme.dart';
 import 'package:go_router/go_router.dart';
+import '../../data/services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -212,7 +213,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         const SizedBox(height: 16),
                         TextButton(
                           onPressed: _isLoading ? null : () {
-                            // TODO: Navigate to register
+                            context.go('/register');
                           },
                           child: Text(
                             'Register',
@@ -234,12 +235,28 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   Future<void> _handleLogin() async {
     setState(() => _isLoading = true);
     
-    // TODO: Implement actual login logic
-    await Future.delayed(const Duration(seconds: 2));
-    
-    if (mounted) {
-      setState(() => _isLoading = false);
-      context.go('/home');
+    try {
+      await AuthService().login(
+        _emailController.text,
+        _passwordController.text,
+      );
+      
+      if (mounted) {
+        context.go('/logged-in');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 } 
