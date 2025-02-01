@@ -6,11 +6,13 @@ import 'circular_menu_button.dart';
 class CircularMenuLayout extends StatelessWidget {
   final List<InputOption> options;
   final Function(BuildContext, InputOption) onOptionTap;
+  final VoidCallback? onCenterTap;
 
   const CircularMenuLayout({
     super.key,
     required this.options,
     required this.onOptionTap,
+    this.onCenterTap,
   });
 
   @override
@@ -37,7 +39,7 @@ class CircularMenuLayout extends StatelessWidget {
         child: CircularMenuButton(
           option: centerOption,
           size: dimensions.centerButtonSize,
-          onTap: () => onOptionTap(context, centerOption),
+          onTap: onCenterTap ?? () => onOptionTap(context, centerOption),
         ),
       ),
     );
