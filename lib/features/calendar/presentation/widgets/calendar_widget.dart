@@ -64,7 +64,10 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
   List<Event> _getEventsForDay(DateTime day) {
     final normalizedDay = DateTime(day.year, day.month, day.day);
-    return _groupedEvents[normalizedDay] ?? [];
+    final events = _groupedEvents[normalizedDay] ?? [];
+    // Sort events by time
+    events.sort((a, b) => a.date.compareTo(b.date));
+    return events;
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
