@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import '../../../calendar/presentation/pages/calendar_page.dart';
 import '../../../clock/presentation/pages/clock_page.dart';
 import '../../../nutrition_dashboard/presentation/pages/nutrition_dashboard_page.dart';
+import '../widgets/top_navigation_bar.dart';
 
-class FoodTrackingPage extends StatefulWidget {
-  const FoodTrackingPage({super.key});
+class DailyTrackingPage extends StatefulWidget {
+  const DailyTrackingPage({super.key});
 
   @override
-  State<FoodTrackingPage> createState() => _FoodTrackingPageState();
+  State<DailyTrackingPage> createState() => _DailyTrackingPageState();
 }
 
-class _FoodTrackingPageState extends State<FoodTrackingPage>
+class _DailyTrackingPageState extends State<DailyTrackingPage>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
 
@@ -29,26 +30,13 @@ class _FoodTrackingPageState extends State<FoodTrackingPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
+      appBar: TopNavigationBar(tabController: _tabController),
       body: TabBarView(
         controller: _tabController,
         children: const [
           CalendarPage(),
           ClockPage(),
           NutritionDashboardPage(),
-        ],
-      ),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      bottom: TabBar(
-        controller: _tabController,
-        tabs: const [
-          Tab(icon: Icon(Icons.calendar_today), text: 'Calendar'),
-          Tab(icon: Icon(Icons.access_time), text: 'Clock'),
-          Tab(icon: Icon(Icons.bar_chart), text: 'Nutrition'),
         ],
       ),
     );
