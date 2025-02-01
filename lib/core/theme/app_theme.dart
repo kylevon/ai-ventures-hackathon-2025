@@ -224,6 +224,19 @@ class AppTheme {
     letterSpacing: 0.5,
   );
 
+  // Event Type Colors
+  static const Map<int, Color> pills = {
+    100: Color(0xFFEDE7F6), // Light pharmaceutical purple
+    200: Color(0xFFD1C4E9),
+    300: Color(0xFFB39DDB),
+    400: Color(0xFF9575CD),
+    500: Color(0xFF7E57C2), // Vibrant pharmaceutical purple
+    600: Color(0xFF673AB7),
+    700: Color(0xFF5E35B1),
+    800: Color(0xFF512DA8),
+    900: Color(0xFF4527A0),
+  };
+
   // Theme Configuration Methods
   static ThemeData get lightTheme {
     return ThemeData(

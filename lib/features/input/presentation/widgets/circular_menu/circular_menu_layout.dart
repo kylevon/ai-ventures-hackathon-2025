@@ -26,6 +26,7 @@ class CircularMenuLayout extends StatelessWidget {
           children: [
             _buildCenterButton(context, dimensions),
             ..._buildSurroundingButtons(context, dimensions),
+            ..._buildCustomPositionedButtons(context, dimensions),
           ],
         );
       },
@@ -49,14 +50,19 @@ class CircularMenuLayout extends StatelessWidget {
     BuildContext context,
     _MenuDimensions dimensions,
   ) {
-    final otherOptions = options.where((option) => !option.isCenter).toList();
-    return List.generate(otherOptions.length, (index) {
+    final circularOptions = options
+        .where(
+          (option) => !option.isCenter && option.customPosition == null,
+        )
+        .toList();
+
+    return List.generate(circularOptions.length, (index) {
       final position = _calculateButtonPosition(
         index,
-        otherOptions.length,
+        circularOptions.length,
         dimensions,
       );
-      final option = otherOptions[index];
+      final option = circularOptions[index];
 
       return Positioned(
         left: position.left,
@@ -68,6 +74,35 @@ class CircularMenuLayout extends StatelessWidget {
         ),
       );
     });
+  }
+
+  List<Widget> _buildCustomPositionedButtons(
+    BuildContext context,
+    _MenuDimensions dimensions,
+  ) {
+    final customOptions = options
+        .where(
+          (option) => !option.isCenter && option.customPosition != null,
+        )
+        .toList();
+
+    return customOptions.map((option) {
+      // Calculate position relative to the Exercise button (first in the circle)
+      final exercisePosition = _calculateButtonPosition(0, 8, dimensions);
+      final offset = option.customPosition!;
+
+      return Positioned(
+        left: exercisePosition.left +
+            (offset.dx * dimensions.surroundingButtonSize),
+        top: exercisePosition.top +
+            (offset.dy * dimensions.surroundingButtonSize * 1.5),
+        child: CircularMenuButton(
+          option: option,
+          size: dimensions.surroundingButtonSize,
+          onTap: () => onOptionTap(context, option),
+        ),
+      );
+    }).toList();
   }
 
   _MenuDimensions _calculateDimensions(BoxConstraints constraints) {

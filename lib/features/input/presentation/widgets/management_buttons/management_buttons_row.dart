@@ -26,7 +26,7 @@ class ManagementButtonsRow extends StatelessWidget {
     return ManagementButton(
       icon: Icons.notifications_active,
       label: 'Reminders',
-      color: AppTheme.primary[300]!,
+      color: AppTheme.primary[700]!,
       onTap: () => _showComingSoonSnackBar(context, 'Reminders'),
     );
   }
@@ -35,7 +35,7 @@ class ManagementButtonsRow extends StatelessWidget {
     return ManagementButton(
       icon: Icons.track_changes,
       label: 'Goals',
-      color: AppTheme.primary[400]!,
+      color: AppTheme.primary[700]!,
       onTap: () => _showComingSoonSnackBar(context, 'Goals'),
     );
   }
@@ -44,7 +44,7 @@ class ManagementButtonsRow extends StatelessWidget {
     return ManagementButton(
       icon: Icons.block,
       label: 'Restrictions',
-      color: AppTheme.primary[500]!,
+      color: AppTheme.primary[700]!,
       onTap: () => _showComingSoonSnackBar(context, 'Restrictions'),
     );
   }

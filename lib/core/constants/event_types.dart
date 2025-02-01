@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
 enum EventType {
+  pills,
   exercise,
   sleep,
   food,
@@ -16,6 +17,8 @@ enum EventType {
 
   String get displayName {
     switch (this) {
+      case EventType.pills:
+        return 'Pills';
       case EventType.exercise:
         return 'Exercise';
       case EventType.sleep:
@@ -43,6 +46,8 @@ enum EventType {
 
   Color get color {
     switch (this) {
+      case EventType.pills:
+        return AppTheme.pills[500]!;
       case EventType.exercise:
         return AppTheme.exercise[500]!;
       case EventType.sleep:
@@ -70,6 +75,8 @@ enum EventType {
 
   IconData get icon {
     switch (this) {
+      case EventType.pills:
+        return Icons.medication;
       case EventType.exercise:
         return Icons.fitness_center;
       case EventType.sleep:

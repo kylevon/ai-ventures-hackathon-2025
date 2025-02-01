@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/event_types.dart';
+import '../../../../../core/theme/app_theme.dart';
 import '../../../domain/models/input_option.dart';
 
 class CircularMenuOptions {
@@ -14,16 +15,16 @@ class CircularMenuOptions {
     return InputOption(
       icon: Icons.chat_bubble_outline,
       label: 'Chat',
-      color: EventType.misc.color,
+      color: AppTheme.primary[500]!,
       isCenter: true,
     );
   }
 
   static List<InputOption> _createSurroundingOptions() {
-    // Select 8 most important event types for the circular menu
+    // Keep the original 8 event types for the circle
     final mainEventTypes = [
       EventType.exercise,
-      EventType.sleep,
+      EventType.pills,
       EventType.food,
       EventType.liquids,
       EventType.period,
