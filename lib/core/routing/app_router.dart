@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
-import '../../features/auth/presentation/pages/logged_in_page.dart';
 import '../../features/auth/data/services/auth_service.dart';
 import '../../features/shared/presentation/layouts/authenticated_layout.dart';
 import '../../features/calendar/presentation/pages/calendar_page.dart';
@@ -15,8 +13,8 @@ class AppRouter {
     initialLocation: '/login',
     redirect: (context, state) {
       final isAuthenticated = AuthService().isAuthenticated;
-      final isAuthRoute = state.matchedLocation == '/login' || 
-                         state.matchedLocation == '/register';
+      final isAuthRoute = state.matchedLocation == '/login' ||
+          state.matchedLocation == '/register';
 
       if (!isAuthenticated && !isAuthRoute) {
         return '/login';
@@ -37,23 +35,23 @@ class AppRouter {
       ),
       GoRoute(
         path: '/calendar',
-        builder: (context, state) => AuthenticatedLayout(
+        builder: (context, state) => const AuthenticatedLayout(
           currentPath: '/calendar',
-          child: const CalendarPage(),
+          child: CalendarPage(),
         ),
       ),
       GoRoute(
         path: '/input',
-        builder: (context, state) => AuthenticatedLayout(
+        builder: (context, state) => const AuthenticatedLayout(
           currentPath: '/input',
-          child: const InputPage(),
+          child: InputPage(),
         ),
       ),
       GoRoute(
         path: '/review',
-        builder: (context, state) => AuthenticatedLayout(
+        builder: (context, state) => const AuthenticatedLayout(
           currentPath: '/review',
-          child: const ReviewPage(),
+          child: ReviewPage(),
         ),
       ),
     ],
@@ -66,4 +64,4 @@ class AppRouter {
       ),
     ),
   );
-} 
+}

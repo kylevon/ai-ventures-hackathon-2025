@@ -10,7 +10,8 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> with TickerProviderStateMixin {
+class _RegisterPageState extends State<RegisterPage>
+    with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -22,7 +23,7 @@ class _RegisterPageState extends State<RegisterPage> with TickerProviderStateMix
   DateTime? _selectedDate;
   String? _selectedSex;
   String? _selectedGender;
-  List<String> _selectedDiseases = [];
+  final List<String> _selectedDiseases = [];
   bool _isLoading = false;
 
   // Animation controllers
@@ -33,22 +34,30 @@ class _RegisterPageState extends State<RegisterPage> with TickerProviderStateMix
   late Animation<double> _formSlideAnimation;
 
   static const int numCircles = 8;
-  static const double goldenRatio = 1.618;
   static const double baseRadius = 80.0;
 
   static const List<String> sexOptions = ['male', 'female', 'other'];
   static const List<String> genderOptions = [
-    'Male', 'Female', 'Non-binary', 'Other', 'Prefer not to say'
+    'Male',
+    'Female',
+    'Non-binary',
+    'Other',
+    'Prefer not to say'
   ];
   static const List<String> commonDiseases = [
-    'Diabetes', 'Hypertension', 'Heart Disease', 'Asthma',
-    'Allergies', 'Celiac Disease', 'Lactose Intolerance'
+    'Diabetes',
+    'Hypertension',
+    'Heart Disease',
+    'Asthma',
+    'Allergies',
+    'Celiac Disease',
+    'Lactose Intolerance'
   ];
 
   @override
   void initState() {
     super.initState();
-    
+
     // Create separate controllers for each orbit
     _orbitControllers = List.generate(
       numCircles,
@@ -130,6 +139,8 @@ class _RegisterPageState extends State<RegisterPage> with TickerProviderStateMix
     };
 
     // TODO: Implement actual registration logic
+    print('Registering user with data: $userData');
+
     await Future.delayed(const Duration(seconds: 2));
 
     if (mounted) {
@@ -169,7 +180,7 @@ class _RegisterPageState extends State<RegisterPage> with TickerProviderStateMix
                 final angle = _orbitControllers[index].value * 2 * math.pi;
                 final radiusFactor = 1.0 + (index * 0.5);
                 final wobble = math.sin(angle * 2) * 10;
-                
+
                 return Positioned(
                   left: screenSize.width / 2 +
                       (baseRadius * radiusFactor * math.cos(angle)) +
@@ -247,33 +258,38 @@ class _RegisterPageState extends State<RegisterPage> with TickerProviderStateMix
                           TextFormField(
                             controller: _nameController,
                             decoration: AuthTheme.inputDecoration('Full Name'),
-                            validator: (value) =>
-                                value?.isEmpty == true ? 'Please enter your name' : null,
+                            validator: (value) => value?.isEmpty == true
+                                ? 'Please enter your name'
+                                : null,
                           ),
                           const SizedBox(height: 16),
                           TextFormField(
                             controller: _emailController,
                             decoration: AuthTheme.inputDecoration('Email'),
                             keyboardType: TextInputType.emailAddress,
-                            validator: (value) =>
-                                value?.isEmpty == true ? 'Please enter your email' : null,
+                            validator: (value) => value?.isEmpty == true
+                                ? 'Please enter your email'
+                                : null,
                           ),
                           const SizedBox(height: 16),
                           TextFormField(
                             controller: _passwordController,
                             decoration: AuthTheme.inputDecoration('Password'),
                             obscureText: true,
-                            validator: (value) =>
-                                value?.isEmpty == true ? 'Please enter a password' : null,
+                            validator: (value) => value?.isEmpty == true
+                                ? 'Please enter a password'
+                                : null,
                           ),
                           const SizedBox(height: 16),
                           TextFormField(
                             controller: _dateController,
-                            decoration: AuthTheme.inputDecoration('Date of Birth'),
+                            decoration:
+                                AuthTheme.inputDecoration('Date of Birth'),
                             readOnly: true,
                             onTap: () => _selectDate(context),
-                            validator: (value) =>
-                                value?.isEmpty == true ? 'Please select your date of birth' : null,
+                            validator: (value) => value?.isEmpty == true
+                                ? 'Please select your date of birth'
+                                : null,
                           ),
                           const SizedBox(height: 16),
                           Row(
@@ -281,20 +297,24 @@ class _RegisterPageState extends State<RegisterPage> with TickerProviderStateMix
                               Expanded(
                                 child: TextFormField(
                                   controller: _heightController,
-                                  decoration: AuthTheme.inputDecoration('Height (cm)'),
+                                  decoration:
+                                      AuthTheme.inputDecoration('Height (cm)'),
                                   keyboardType: TextInputType.number,
-                                  validator: (value) =>
-                                      value?.isEmpty == true ? 'Required' : null,
+                                  validator: (value) => value?.isEmpty == true
+                                      ? 'Required'
+                                      : null,
                                 ),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: TextFormField(
                                   controller: _weightController,
-                                  decoration: AuthTheme.inputDecoration('Weight (kg)'),
+                                  decoration:
+                                      AuthTheme.inputDecoration('Weight (kg)'),
                                   keyboardType: TextInputType.number,
-                                  validator: (value) =>
-                                      value?.isEmpty == true ? 'Required' : null,
+                                  validator: (value) => value?.isEmpty == true
+                                      ? 'Required'
+                                      : null,
                                 ),
                               ),
                             ],
@@ -303,11 +323,15 @@ class _RegisterPageState extends State<RegisterPage> with TickerProviderStateMix
                           DropdownButtonFormField<String>(
                             value: _selectedSex,
                             decoration: AuthTheme.inputDecoration('Sex'),
-                            items: sexOptions.map((sex) => DropdownMenuItem(
-                              value: sex,
-                              child: Text(sex[0].toUpperCase() + sex.substring(1)),
-                            )).toList(),
-                            onChanged: (value) => setState(() => _selectedSex = value),
+                            items: sexOptions
+                                .map((sex) => DropdownMenuItem(
+                                      value: sex,
+                                      child: Text(sex[0].toUpperCase() +
+                                          sex.substring(1)),
+                                    ))
+                                .toList(),
+                            onChanged: (value) =>
+                                setState(() => _selectedSex = value),
                             validator: (value) =>
                                 value == null ? 'Please select your sex' : null,
                           ),
@@ -315,13 +339,17 @@ class _RegisterPageState extends State<RegisterPage> with TickerProviderStateMix
                           DropdownButtonFormField<String>(
                             value: _selectedGender,
                             decoration: AuthTheme.inputDecoration('Gender'),
-                            items: genderOptions.map((gender) => DropdownMenuItem(
-                              value: gender,
-                              child: Text(gender),
-                            )).toList(),
-                            onChanged: (value) => setState(() => _selectedGender = value),
-                            validator: (value) =>
-                                value == null ? 'Please select your gender' : null,
+                            items: genderOptions
+                                .map((gender) => DropdownMenuItem(
+                                      value: gender,
+                                      child: Text(gender),
+                                    ))
+                                .toList(),
+                            onChanged: (value) =>
+                                setState(() => _selectedGender = value),
+                            validator: (value) => value == null
+                                ? 'Please select your gender'
+                                : null,
                           ),
                           const SizedBox(height: 16),
                           const Text(
@@ -337,7 +365,8 @@ class _RegisterPageState extends State<RegisterPage> with TickerProviderStateMix
                               Expanded(
                                 child: TextFormField(
                                   controller: _diseaseController,
-                                  decoration: AuthTheme.inputDecoration('Enter condition'),
+                                  decoration: AuthTheme.inputDecoration(
+                                      'Enter condition'),
                                 ),
                               ),
                               const SizedBox(width: 8),
@@ -345,7 +374,8 @@ class _RegisterPageState extends State<RegisterPage> with TickerProviderStateMix
                                 onPressed: () {
                                   if (_diseaseController.text.isNotEmpty) {
                                     setState(() {
-                                      _selectedDiseases.add(_diseaseController.text.trim());
+                                      _selectedDiseases
+                                          .add(_diseaseController.text.trim());
                                       _diseaseController.clear();
                                     });
                                   }
@@ -361,15 +391,18 @@ class _RegisterPageState extends State<RegisterPage> with TickerProviderStateMix
                             Wrap(
                               spacing: 8,
                               runSpacing: 8,
-                              children: _selectedDiseases.map((disease) => Chip(
-                                label: Text(disease),
-                                onDeleted: () {
-                                  setState(() {
-                                    _selectedDiseases.remove(disease);
-                                  });
-                                },
-                                deleteIcon: const Icon(Icons.cancel, size: 18),
-                              )).toList(),
+                              children: _selectedDiseases
+                                  .map((disease) => Chip(
+                                        label: Text(disease),
+                                        onDeleted: () {
+                                          setState(() {
+                                            _selectedDiseases.remove(disease);
+                                          });
+                                        },
+                                        deleteIcon:
+                                            const Icon(Icons.cancel, size: 18),
+                                      ))
+                                  .toList(),
                             ),
                             const SizedBox(height: 16),
                           ],
@@ -385,16 +418,19 @@ class _RegisterPageState extends State<RegisterPage> with TickerProviderStateMix
                           Wrap(
                             spacing: 8,
                             runSpacing: 8,
-                            children: commonDiseases.map((disease) => ActionChip(
-                              label: Text(disease),
-                              onPressed: () {
-                                if (!_selectedDiseases.contains(disease)) {
-                                  setState(() {
-                                    _selectedDiseases.add(disease);
-                                  });
-                                }
-                              },
-                            )).toList(),
+                            children: commonDiseases
+                                .map((disease) => ActionChip(
+                                      label: Text(disease),
+                                      onPressed: () {
+                                        if (!_selectedDiseases
+                                            .contains(disease)) {
+                                          setState(() {
+                                            _selectedDiseases.add(disease);
+                                          });
+                                        }
+                                      },
+                                    ))
+                                .toList(),
                           ),
                           const SizedBox(height: 32),
                           ElevatedButton(
@@ -406,16 +442,17 @@ class _RegisterPageState extends State<RegisterPage> with TickerProviderStateMix
                                     height: 24,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
                                     ),
                                   )
-                                : Text('Register', style: AuthTheme.buttonTextStyle),
+                                : Text('Register',
+                                    style: AuthTheme.buttonTextStyle),
                           ),
                           const SizedBox(height: 16),
                           TextButton(
-                            onPressed: _isLoading
-                                ? null
-                                : () => context.go('/login'),
+                            onPressed:
+                                _isLoading ? null : () => context.go('/login'),
                             child: Text(
                               'Already have an account? Login',
                               style: AuthTheme.registerButtonTextStyle,
@@ -433,4 +470,4 @@ class _RegisterPageState extends State<RegisterPage> with TickerProviderStateMix
       ),
     );
   }
-} 
+}

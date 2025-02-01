@@ -22,13 +22,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   bool _isLoading = false;
 
   static const int numCircles = 8;
-  static const double goldenRatio = 1.618;
   static const double baseRadius = 80.0;
 
   @override
   void initState() {
     super.initState();
-    
+
     // Create separate controllers for each orbit
     _orbitControllers = List.generate(
       numCircles,
@@ -105,7 +104,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 final angle = _orbitControllers[index].value * 2 * math.pi;
                 final radiusFactor = 1.0 + (index * 0.5);
                 final wobble = math.sin(angle * 2) * 10;
-                
+
                 return Positioned(
                   left: screenSize.width / 2 +
                       (baseRadius * radiusFactor * math.cos(angle)) +
@@ -208,13 +207,16 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                     ),
                                   ),
                                 )
-                              : Text('Log in', style: AuthTheme.buttonTextStyle),
+                              : Text('Log in',
+                                  style: AuthTheme.buttonTextStyle),
                         ),
                         const SizedBox(height: 16),
                         TextButton(
-                          onPressed: _isLoading ? null : () {
-                            context.go('/register');
-                          },
+                          onPressed: _isLoading
+                              ? null
+                              : () {
+                                  context.go('/register');
+                                },
                           child: Text(
                             'Register',
                             style: AuthTheme.registerButtonTextStyle,
@@ -234,13 +236,13 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
   Future<void> _handleLogin() async {
     setState(() => _isLoading = true);
-    
+
     try {
       await AuthService().login(
         _emailController.text,
         _passwordController.text,
       );
-      
+
       if (mounted) {
         context.go('/input');
       }
@@ -259,4 +261,4 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       }
     }
   }
-} 
+}
