@@ -22,26 +22,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Calendar'),
-        actions: [
-          if (_isSyncing)
-            const Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
-              ),
-            ),
-        ],
-      ),
-      body: CalendarScreen(
-        onEventsChanged: _handleEventsChanged,
-      ),
+    return CalendarScreen(
+      onEventsChanged: _handleEventsChanged,
     );
   }
 }
