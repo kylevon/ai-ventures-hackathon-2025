@@ -21,9 +21,9 @@ class ClockController {
     return await _eventService.addEvent(event);
   }
 
-  Future<Event> updateEvent(Event event) async {
+  Future<void> updateEvent(Event event) async {
     _logger.info('Updating event: ${event.title}');
-    return await _eventService.updateEvent(event);
+    await _eventService.updateEvent(event);
   }
 
   Future<void> deleteEvent(String id) async {

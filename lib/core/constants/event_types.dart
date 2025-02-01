@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
+/// Unified enum for all event types in the application.
+/// This is the single source of truth for event types.
 enum EventType {
   pills,
   exercise,

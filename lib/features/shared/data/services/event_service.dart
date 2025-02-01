@@ -5,20 +5,24 @@ import 'mock_server_service.dart';
 class EventService {
   static final EventService _instance = EventService._internal();
   factory EventService() => _instance;
-  EventService._internal();
+  EventService._internal() {
+    _initializeCache();
+  }
 
   final _serverService = MockServerService();
   final List<Event> _cache = [];
-  bool _needsSync = true;
+  bool _isInitialized = false;
   final _logger = Logger('EventService');
 
-  // Fetch events from server and update cache
-  Future<List<Event>> fetchEvents() async {
-    _logger.info('Fetching events from server...');
+  Future<void> _initializeCache() async {
+    if (_isInitialized) return;
+
+    _logger.info('Initializing event cache...');
     final events = await _serverService.get('/api/events');
-    _logger.info('Received ${events.length} events from server');
-    _updateCache(events);
-    return List.from(_cache);
+    _cache.clear();
+    _cache.addAll(events);
+    _isInitialized = true;
+    _logger.info('Cache initialized with ${events.length} events');
   }
 
   // Add event locally and send to server
@@ -30,49 +34,42 @@ class EventService {
 
     // Update cache immediately
     _cache.add(newEvent);
-    _needsSync = true;
+    _logger.info('Cache after addition: ${_cache.length} events');
 
     // Send to server (but don't wait for response to update UI)
-    _serverService.post(
-      '/api/events',
-      data: {'event': _eventToJson(newEvent)},
-    );
+    await _serverService.post('/api/events', data: _eventToJson(newEvent));
+    _logger.info('Post request sent to server');
 
     return newEvent;
   }
 
   // Update event locally and send to server
-  Future<Event> updateEvent(Event event) async {
-    // Update cache immediately
-    final index = _cache.indexWhere((e) => e.id == event.id);
-    if (index != -1) {
-      _cache[index] = event;
+  Future<void> updateEvent(Event event) async {
+    final eventIndex = _cache.indexWhere((e) => e.id == event.id);
+    if (eventIndex == -1) {
+      _logger.warning('Event not found in cache: ${event.id}');
+      return;
     }
-    _needsSync = true;
+
+    // Update cache immediately
+    _cache[eventIndex] = event;
+    _logger.info('Cache after update: ${_cache.length} events');
 
     // Send to server (but don't wait for response to update UI)
-    _serverService.put(
-      '/api/events/${event.id}',
-      data: {'event': _eventToJson(event)},
-    );
-
-    return event;
+    await _serverService.put('/api/events/${event.id}',
+        data: _eventToJson(event));
+    _logger.info('Update request sent to server');
   }
 
   // Delete event locally and send to server
   Future<void> deleteEvent(String id) async {
-    _logger.info('Deleting event with id: $id');
-    _logger.info('Cache before deletion: ${_cache.length} events');
-
-    // Update cache immediately
     final eventIndex = _cache.indexWhere((e) => e.id == id);
     if (eventIndex == -1) {
-      _logger.warning('Event with id $id not found in cache');
+      _logger.warning('Event not found in cache: $id');
       return;
     }
 
     _cache.removeAt(eventIndex);
-    _needsSync = true;
     _logger.info('Cache after deletion: ${_cache.length} events');
 
     // Send to server (but don't wait for response to update UI)
@@ -81,20 +78,10 @@ class EventService {
   }
 
   // Get events from cache
-  List<Event> getCachedEvents() {
+  Future<List<Event>> getEvents() async {
+    await _initializeCache(); // Ensure cache is initialized
     _logger.info('Getting ${_cache.length} events from cache');
     return List.from(_cache);
-  }
-
-  // Check if cache needs sync
-  bool needsSync() => _needsSync;
-
-  // Update cache with new events
-  void _updateCache(List<Event> events) {
-    _cache.clear();
-    _cache.addAll(events);
-    _needsSync = false;
-    _logger.info('Updated cache with ${events.length} events');
   }
 
   // Convert event to JSON
@@ -103,16 +90,9 @@ class EventService {
       'id': event.id,
       'title': event.title,
       'description': event.description,
-      'startDate': event.date.toIso8601String(),
-      'startTime': event.startTime != null
-          ? '${event.startTime!.hour}:${event.startTime!.minute}'
-          : null,
+      'date': event.date.toIso8601String(),
       'type': event.type.name,
       'metadata': event.metadata.toJson(),
     };
-  }
-
-  Future<List<Event>> getEvents() async {
-    return getCachedEvents();
   }
 }

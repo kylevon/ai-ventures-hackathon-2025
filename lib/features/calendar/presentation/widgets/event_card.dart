@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:michro_flutter/features/shared/domain/models/event.dart';
-import 'package:michro_flutter/features/shared/domain/utils/event_type_utils.dart';
+import '../../../../core/constants/event_types.dart';
+import '../../../shared/domain/models/event.dart';
 
 class EventCard extends StatelessWidget {
   final Event event;
@@ -15,40 +15,41 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(16.0),
           child: Row(
             children: [
               _buildEventIcon(),
-              const SizedBox(width: 12),
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       event.title,
-                      style: Theme.of(context).textTheme.titleMedium,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     if (event.description != null) ...[
                       const SizedBox(height: 4),
                       Text(
                         event.description!,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
-                            ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                        ),
                       ),
                     ],
                     const SizedBox(height: 4),
                     Text(
                       event.timeRange,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 12,
+                      ),
                     ),
                   ],
                 ),
@@ -69,7 +70,7 @@ class EventCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Icon(
-        EventTypeUtils.getEventTypeIcon(event.type),
+        event.type.icon,
         color: event.color,
         size: 24,
       ),

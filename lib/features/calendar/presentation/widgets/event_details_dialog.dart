@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:michro_flutter/features/shared/domain/models/event.dart';
-import 'package:michro_flutter/features/shared/domain/utils/event_type_utils.dart';
+import '../../../../core/constants/event_types.dart';
+import '../../../shared/domain/models/event.dart';
 
 class EventDetailsDialog extends StatefulWidget {
-  final Event event;
-  final Function(Event) onUpdate;
-  final Function(String) onDelete;
+  final Event? event;
+  final Function(Event) onSave;
 
   const EventDetailsDialog({
     super.key,
-    required this.event,
-    required this.onUpdate,
-    required this.onDelete,
+    this.event,
+    required this.onSave,
   });
 
   @override
@@ -19,22 +17,20 @@ class EventDetailsDialog extends StatefulWidget {
 }
 
 class _EventDetailsDialogState extends State<EventDetailsDialog> {
-  late TextEditingController _titleController;
-  late TextEditingController _descriptionController;
-  late TimeOfDay? _startTime;
-  late TimeOfDay? _endTime;
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  late DateTime _selectedDate;
   late EventType _selectedType;
-  bool _isEditing = false;
 
   @override
   void initState() {
     super.initState();
-    _titleController = TextEditingController(text: widget.event.title);
-    _descriptionController =
-        TextEditingController(text: widget.event.description ?? '');
-    _startTime = widget.event.startTime;
-    _endTime = widget.event.endTime;
-    _selectedType = widget.event.type;
+    if (widget.event != null) {
+      _titleController.text = widget.event!.title;
+      _descriptionController.text = widget.event!.description ?? '';
+      _selectedDate = widget.event!.date;
+      _selectedType = widget.event!.type;
+    }
   }
 
   @override
@@ -44,197 +40,107 @@ class _EventDetailsDialogState extends State<EventDetailsDialog> {
     super.dispose();
   }
 
-  Future<void> _selectTime(bool isStartTime) async {
-    final TimeOfDay? picked = await showTimePicker(
+  Future<void> _selectDate(BuildContext context) async {
+    final picked = await showDatePicker(
       context: context,
-      initialTime: isStartTime
-          ? (_startTime ?? TimeOfDay.now())
-          : (_endTime ?? TimeOfDay.now()),
+      initialDate: _selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
     );
     if (picked != null) {
       setState(() {
-        if (isStartTime) {
-          _startTime = picked;
-        } else {
-          _endTime = picked;
-        }
+        _selectedDate = picked;
       });
     }
   }
 
-  void _saveChanges() {
-    final updatedEvent = widget.event.copyWith(
+  void _saveEvent() {
+    if (_titleController.text.isEmpty) return;
+
+    final event = Event(
+      id: widget.event?.id ?? DateTime.now().toString(),
       title: _titleController.text,
       description: _descriptionController.text.isEmpty
           ? null
           : _descriptionController.text,
-      startTime: _startTime,
-      endTime: _endTime,
+      date: _selectedDate,
       type: _selectedType,
     );
-    widget.onUpdate(updatedEvent);
-    Navigator.of(context).pop();
-  }
 
-  void _confirmDelete() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Event'),
-        content: const Text('Are you sure you want to delete this event?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              widget.onDelete(widget.event.id);
-              Navigator.of(context).pop();
-            },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
-    );
+    widget.onSave(event);
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+    return AlertDialog(
+      title: Text(widget.event == null ? 'Add Event' : 'Edit Event'),
+      content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  _isEditing ? 'Edit Event' : 'Event Details',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                Row(
-                  children: [
-                    if (!_isEditing)
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () => setState(() => _isEditing = true),
-                      ),
-                    IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: _confirmDelete,
-                    ),
-                  ],
-                ),
-              ],
+            TextField(
+              controller: _titleController,
+              decoration: const InputDecoration(
+                labelText: 'Title',
+                hintText: 'Enter event title',
+              ),
             ),
-            const SizedBox(height: 16),
-            if (_isEditing) ...[
-              TextField(
-                controller: _titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Title',
-                  border: OutlineInputBorder(),
-                ),
+            TextField(
+              controller: _descriptionController,
+              decoration: const InputDecoration(
+                labelText: 'Description (optional)',
+                hintText: 'Enter event description',
               ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 3,
+              maxLines: 3,
+            ),
+            ListTile(
+              title: const Text('Date'),
+              subtitle: Text(
+                '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
               ),
-              const SizedBox(height: 8),
-              DropdownButtonFormField<EventType>(
-                value: _selectedType,
-                decoration: const InputDecoration(
-                  labelText: 'Event Type',
-                  border: OutlineInputBorder(),
-                ),
-                items: EventType.values.map((type) {
-                  return DropdownMenuItem(
-                    value: type,
-                    child: Row(
-                      children: [
-                        Icon(EventTypeUtils.getEventTypeIcon(type),
-                            color: type.color),
-                        const SizedBox(width: 8),
-                        Text(type.displayName),
-                      ],
-                    ),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() => _selectedType = value);
-                  }
-                },
+              trailing: const Icon(Icons.calendar_today),
+              onTap: () => _selectDate(context),
+            ),
+            DropdownButtonFormField<EventType>(
+              value: _selectedType,
+              decoration: const InputDecoration(
+                labelText: 'Event Type',
               ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      icon: const Icon(Icons.access_time),
-                      label: Text(_startTime == null
-                          ? 'Set Start Time'
-                          : 'Start: ${_startTime!.format(context)}'),
-                      onPressed: () => _selectTime(true),
-                    ),
+              items: EventType.values.map((type) {
+                return DropdownMenuItem(
+                  value: type,
+                  child: Row(
+                    children: [
+                      Icon(type.icon, color: type.color),
+                      const SizedBox(width: 8),
+                      Text(type.displayName),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      icon: const Icon(Icons.access_time),
-                      label: Text(_endTime == null
-                          ? 'Set End Time'
-                          : 'End: ${_endTime!.format(context)}'),
-                      onPressed: () => _selectTime(false),
-                    ),
-                  ),
-                ],
-              ),
-            ] else ...[
-              ListTile(
-                leading: Icon(EventTypeUtils.getEventTypeIcon(_selectedType),
-                    color: widget.event.color),
-                title: Text(widget.event.title),
-                subtitle: widget.event.description != null
-                    ? Text(widget.event.description!)
-                    : null,
-              ),
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.access_time),
-                title: Text(widget.event.timeRange),
-              ),
-            ],
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Cancel'),
-                ),
-                if (_isEditing) ...[
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: _saveChanges,
-                    child: const Text('Save'),
-                  ),
-                ],
-              ],
+                );
+              }).toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    _selectedType = value;
+                  });
+                }
+              },
             ),
           ],
         ),
       ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton.icon(
+          onPressed: _saveEvent,
+          icon: Icon(_selectedType.icon, color: Colors.white),
+          label: const Text('Save'),
+        ),
+      ],
     );
   }
 }

@@ -2,110 +2,45 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 import '../../domain/models/event.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/constants/event_types.dart';
 
 class MockServerService {
   static final MockServerService _instance = MockServerService._internal();
   factory MockServerService() => _instance;
   MockServerService._internal();
 
-  final _logger = Logger('MockServerService');
   final List<Event> _serverEvents = [];
+  final _delay = const Duration(milliseconds: 100);
   bool _isInitialized = false;
-  static const _delay = Duration(milliseconds: 500);
+  final _logger = Logger('MockServerService');
 
   Future<void> _initializeServerData() async {
     if (_isInitialized) return;
 
     try {
-      // Temporary hardcoded events for testing
-      final mockEvents = [
-        {
-          "id": "1",
-          "title": "Morning Run",
-          "description": "5km run in the park",
-          "startDate": DateTime.now().toIso8601String(),
-          "startTime": "07:00",
-          "type": "exercise",
-          "metadata": {"duration": 30, "distance": 5, "calories": 300}
-        },
-        {
-          "id": "2",
-          "title": "Breakfast",
-          "description": "Oatmeal with fruits",
-          "startDate": DateTime.now().toIso8601String(),
-          "startTime": "08:00",
-          "type": "meal",
-          "metadata": {
-            "calories": 350,
-            "protein": 12,
-            "carbs": 45,
-            "fat": 8,
-            "ingredients": ["oats", "banana", "berries", "honey"],
-            "mealType": "breakfast"
-          }
-        },
-        {
-          "id": "3",
-          "title": "Lunch",
-          "description": "Salad and sandwich",
-          "startDate": DateTime.now().toIso8601String(),
-          "startTime": "12:00",
-          "type": "meal",
-          "metadata": {
-            "calories": 450,
-            "protein": 20,
-            "carbs": 45,
-            "fat": 15,
-            "mealType": "lunch"
-          }
-        },
-        {
-          "id": "4",
-          "title": "Afternoon Walk",
-          "description": "Quick walk around the block",
-          "startDate": DateTime.now().toIso8601String(),
-          "startTime": "15:00",
-          "type": "exercise",
-          "metadata": {"duration": 15, "distance": 1, "calories": 100}
-        },
-        {
-          "id": "5",
-          "title": "Dinner",
-          "description": "Grilled chicken and vegetables",
-          "startDate": DateTime.now().toIso8601String(),
-          "startTime": "18:00",
-          "type": "meal",
-          "metadata": {
-            "calories": 550,
-            "protein": 35,
-            "carbs": 40,
-            "fat": 20,
-            "mealType": "dinner"
-          }
-        },
-        {
-          "id": "6",
-          "title": "Evening Meditation",
-          "description": "Mindfulness practice",
-          "startDate": DateTime.now().toIso8601String(),
-          "startTime": "21:00",
-          "type": "exercise",
-          "metadata": {"duration": 20}
-        },
-        {
-          "id": "7",
-          "title": "Take Medication",
-          "description": "Evening medication",
-          "startDate": DateTime.now().toIso8601String(),
-          "startTime": "22:00",
-          "type": "medication",
-          "metadata": {"dosage": "1 pill"}
-        }
+      final events = [
+        Event(
+          id: '1',
+          title: 'Morning Pills',
+          description: 'Take morning medication',
+          date: DateTime.now().copyWith(hour: 8, minute: 0),
+          type: EventType.pills,
+        ),
+        Event(
+          id: '2',
+          title: 'Evening Pills',
+          description: 'Take evening medication',
+          date: DateTime.now().copyWith(hour: 20, minute: 0),
+          type: EventType.pills,
+        ),
+        Event(
+          id: '3',
+          title: 'Morning Walk',
+          description: '30 minutes walk in the park',
+          date: DateTime.now().copyWith(hour: 7, minute: 30),
+          type: EventType.exercise,
+        ),
       ];
-
-      final events = mockEvents.map((eventData) {
-        return _parseEvent(eventData);
-      }).toList();
 
       _serverEvents.addAll(events);
       _isInitialized = true;
@@ -126,28 +61,23 @@ class MockServerService {
       });
     }
 
-    final type = EventType.values.firstWhere(
-      (e) => e.name == eventData['type'],
-      orElse: () => EventType.custom,
-    );
+    // Map old event types to new ones
+    final typeStr = eventData['type'] as String;
+    final type = switch (typeStr) {
+      'medication' => EventType.pills,
+      'meal' => EventType.food,
+      'exercise' => EventType.exercise,
+      'measurement' => EventType.heartRate,
+      _ => EventType.misc,
+    };
 
-    final startDate = DateTime.parse(eventData['startDate']);
     return Event(
       id: eventData['id'],
       title: eventData['title'],
       description: eventData['description'],
-      date: startDate,
-      startTime: _parseTimeString(eventData['startTime']),
+      date: DateTime.parse(eventData['startDate']),
       type: type,
       metadata: metadata,
-    );
-  }
-
-  TimeOfDay _parseTimeString(String timeString) {
-    final parts = timeString.split(':');
-    return TimeOfDay(
-      hour: int.parse(parts[0]),
-      minute: int.parse(parts[1]),
     );
   }
 
@@ -155,7 +85,10 @@ class MockServerService {
   Future<List<Event>> get(String endpoint) async {
     await _initializeServerData();
     await Future.delayed(_delay);
-    _logger.info('GET request returning ${_serverEvents.length} events');
+    print('Mock Server returning ${_serverEvents.length} events:');
+    for (final event in _serverEvents) {
+      print('- ${event.title} at ${event.date.hour}:${event.date.minute}');
+    }
     return List.from(_serverEvents);
   }
 

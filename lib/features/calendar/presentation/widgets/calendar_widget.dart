@@ -5,7 +5,7 @@ import 'calendar_style_config.dart';
 
 class CalendarWidget extends StatefulWidget {
   final List<Event> events;
-  final Function(DateTime) onDaySelected;
+  final Function(DateTime, DateTime) onDaySelected;
   final Function(Event)? onEventTap;
   final DateTime? selectedDay;
 
@@ -72,7 +72,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       _selectedDay = selectedDay;
       _focusedDay = focusedDay;
     });
-    widget.onDaySelected(selectedDay);
+    widget.onDaySelected(selectedDay, focusedDay);
   }
 
   Widget _buildEventsMarker(DateTime date, List<Event> events) {
@@ -204,7 +204,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                         ),
                       ),
                       title: Text(event.title),
-                      subtitle: Text(event.timeRange),
+                      subtitle: Text(
+                        '${event.date.hour.toString().padLeft(2, '0')}:${event.date.minute.toString().padLeft(2, '0')}',
+                      ),
                       onTap: () => widget.onEventTap?.call(event),
                     );
                   },

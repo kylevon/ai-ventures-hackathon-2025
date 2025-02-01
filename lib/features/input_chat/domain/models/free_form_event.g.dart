@@ -34,4 +34,5 @@ const _$EventTypeEnumMap = {
   EventType.mood: 'mood',
   EventType.symptoms: 'symptoms',
   EventType.misc: 'misc',
+  EventType.pills: 'pills',
 };

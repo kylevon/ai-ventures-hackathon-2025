@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/constants/event_types.dart';
 import 'event.dart';
 
 class FoodEvent extends Event {
@@ -24,7 +25,7 @@ class FoodEvent extends Event {
     this.mealType,
     super.metadata,
     super.customColor,
-  }) : super(type: EventType.meal);
+  }) : super(type: EventType.food);
 
   @override
   Event copyWith({
