@@ -94,3 +94,4 @@ flutter:
 
   assets:
     - assets/images/
+    - lib/features/calendar/data/mock_data/

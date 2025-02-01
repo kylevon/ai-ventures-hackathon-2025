@@ -35,12 +35,14 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     _selectedDay = DateTime.now();
     _pageController = PageController();
     _groupEvents();
+    print('Calendar widget initialized');
   }
 
   @override
   void didUpdateWidget(CalendarWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.events != widget.events) {
+      print('Events updated, regrouping...');
       _groupEvents();
     }
   }
@@ -53,12 +55,21 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         event.startDate.month,
         event.startDate.day,
       );
-      _groupedEvents[date] = [...(_groupedEvents[date] ?? []), event];
+      if (_groupedEvents[date] == null) _groupedEvents[date] = [];
+      _groupedEvents[date]!.add(event);
     }
+    print('Events grouped: ${_groupedEvents.length} days with events');
+    _groupedEvents.forEach((date, events) {
+      print('${date.toString()}: ${events.length} events');
+    });
   }
 
   List<CalendarEvent> _getEventsForDay(DateTime day) {
-    return _groupedEvents[day] ?? [];
+    final normalizedDay = DateTime(day.year, day.month, day.day);
+    final events = _groupedEvents[normalizedDay] ?? [];
+    print(
+        'Getting events for ${normalizedDay.toString()}: ${events.length} events');
+    return events;
   }
 
   @override

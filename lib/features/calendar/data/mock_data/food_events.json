@@ -1,0 +1,64 @@
+{
+  "events": [
+    {
+      "id": "breakfast-1",
+      "title": "Oatmeal with Fruits",
+      "description": "Healthy breakfast with mixed berries",
+      "startTime": "08:00",
+      "type": "meal",
+      "metadata": {
+        "calories": 350,
+        "protein": 12,
+        "carbs": 45,
+        "fat": 8,
+        "ingredients": ["Oats", "Milk", "Mixed berries", "Honey"],
+        "mealType": "breakfast"
+      }
+    },
+    {
+      "id": "lunch-1",
+      "title": "Grilled Chicken Salad",
+      "description": "Fresh salad with grilled chicken breast",
+      "startTime": "13:00",
+      "type": "meal",
+      "metadata": {
+        "calories": 450,
+        "protein": 35,
+        "carbs": 20,
+        "fat": 15,
+        "ingredients": ["Chicken breast", "Mixed greens", "Olive oil", "Balsamic vinegar"],
+        "mealType": "lunch"
+      }
+    },
+    {
+      "id": "dinner-1",
+      "title": "Salmon with Quinoa",
+      "description": "Baked salmon with quinoa and vegetables",
+      "startTime": "19:00",
+      "type": "meal",
+      "metadata": {
+        "calories": 550,
+        "protein": 40,
+        "carbs": 35,
+        "fat": 25,
+        "ingredients": ["Salmon", "Quinoa", "Broccoli", "Lemon"],
+        "mealType": "dinner"
+      }
+    },
+    {
+      "id": "breakfast-2",
+      "title": "Greek Yogurt Parfait",
+      "description": "Yogurt with granola and honey",
+      "startTime": "08:30",
+      "type": "meal",
+      "metadata": {
+        "calories": 300,
+        "protein": 15,
+        "carbs": 40,
+        "fat": 10,
+        "ingredients": ["Greek yogurt", "Granola", "Honey", "Almonds"],
+        "mealType": "breakfast"
+      }
+    }
+  ]
+} 

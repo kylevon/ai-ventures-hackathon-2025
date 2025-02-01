@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/calendar_widget.dart';
 import '../../domain/models/calendar_event.dart';
+import '../../data/services/mock_food_service.dart';
+import '../../domain/models/food_event.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -10,53 +12,31 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  // TODO: Replace with actual data from a service
-  final List<CalendarEvent> _mockEvents = [
-    CalendarEvent(
-      title: 'Morning Medication',
-      description: 'Take 2 pills with water',
-      startDate: DateTime.now(),
-      startTime: const TimeOfDay(hour: 8, minute: 0),
-      type: EventType.medication,
-      isRecurring: true,
-      recurrenceRule: 'FREQ=DAILY',
-    ),
-    CalendarEvent(
-      title: 'Breakfast',
-      description: 'Oatmeal with fruits',
-      startDate: DateTime.now(),
-      startTime: const TimeOfDay(hour: 9, minute: 0),
-      type: EventType.meal,
-    ),
-    CalendarEvent(
-      title: 'Evening Walk',
-      description: '30 minutes moderate pace',
-      startDate: DateTime.now(),
-      startTime: const TimeOfDay(hour: 18, minute: 0),
-      endTime: const TimeOfDay(hour: 18, minute: 30),
-      type: EventType.exercise,
-    ),
-    CalendarEvent(
-      title: 'Blood Pressure Check',
-      startDate: DateTime.now().add(const Duration(days: 1)),
-      startTime: const TimeOfDay(hour: 10, minute: 0),
-      type: EventType.measurement,
-    ),
-    CalendarEvent(
-      title: 'Doctor Appointment',
-      description: 'Annual checkup',
-      startDate: DateTime.now().add(const Duration(days: 5)),
-      startTime: const TimeOfDay(hour: 14, minute: 30),
-      location: 'City Medical Center',
-      type: EventType.appointment,
-    ),
-  ];
+  final _foodService = MockFoodService();
+  List<CalendarEvent> _events = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEvents();
+  }
+
+  Future<void> _loadEvents() async {
+    await _foodService.init();
+    if (mounted) {
+      setState(() {
+        _events = _foodService.getAllEvents();
+      });
+      print('Calendar page initialized with ${_events.length} events');
+    }
+  }
 
   void _handleDaySelected(DateTime selectedDay) {
-    // TODO: Implement day selection handling
+    // No longer showing nutritional summary
   }
 
   void _handleEventTap(CalendarEvent event) {
+    final foodMetadata = event.metadata as FoodMetadata;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -70,14 +50,19 @@ class _CalendarPageState extends State<CalendarPage> {
               const SizedBox(height: 8),
             ],
             Text('Time: ${event.timeRange}'),
-            if (event.location != null) ...[
-              const SizedBox(height: 8),
-              Text('Location: ${event.location}'),
-            ],
-            if (event.isRecurring) ...[
-              const SizedBox(height: 8),
-              const Text('Recurring event'),
-            ],
+            const SizedBox(height: 8),
+            Text('Meal Type: ${foodMetadata.mealType}'),
+            const SizedBox(height: 8),
+            Text('Calories: ${foodMetadata.calories?.toStringAsFixed(0)} cal'),
+            Text('Protein: ${foodMetadata.protein?.toStringAsFixed(1)}g'),
+            Text('Carbs: ${foodMetadata.carbs?.toStringAsFixed(1)}g'),
+            Text('Fat: ${foodMetadata.fat?.toStringAsFixed(1)}g'),
+            const SizedBox(height: 8),
+            const Text('Ingredients:'),
+            ...foodMetadata.ingredients.map((ingredient) => Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: Text('• $ingredient'),
+                )),
           ],
         ),
         actions: [
@@ -102,8 +87,8 @@ class _CalendarPageState extends State<CalendarPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Add Event'),
-        content: const Text('Event creation coming soon...'),
+        title: const Text('Add Food Event'),
+        content: const Text('Food event creation coming soon...'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -116,10 +101,19 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('Building calendar with ${_events.length} events');
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calendar'),
+        title: const Text('Food Calendar'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              setState(() {
+                _events = _foodService.getAllEvents();
+              });
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.filter_list),
             onPressed: () {
@@ -129,11 +123,11 @@ class _CalendarPageState extends State<CalendarPage> {
         ],
       ),
       body: CalendarWidget(
-        events: _mockEvents,
+        events: _events,
         onDaySelected: _handleDaySelected,
         onEventTap: _handleEventTap,
         onAddEvent: _handleAddEvent,
       ),
     );
   }
-} 
+}
