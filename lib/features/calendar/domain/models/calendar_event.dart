@@ -24,6 +24,18 @@ enum EventType {
   custom;
 
   String get displayName => name[0].toUpperCase() + name.substring(1);
+
+  bool get requiresDuration {
+    switch (this) {
+      case EventType.exercise:
+      case EventType.sleep:
+      case EventType.appointment:
+        return true;
+      default:
+        return false;
+    }
+  }
+
   Color get color {
     switch (this) {
       case EventType.medication:
@@ -56,7 +68,7 @@ class CalendarEvent {
   final DateTime startDate;
   final DateTime endDate;
   final TimeOfDay? startTime;
-  final TimeOfDay? endTime;
+  TimeOfDay? endTime;
   final EventType type;
   final bool isAllDay;
   final bool isRecurring;
@@ -87,11 +99,22 @@ class CalendarEvent {
     DateTime? createdAt,
     DateTime? updatedAt,
   })  : id = id ?? DateTime.now().millisecondsSinceEpoch.toString(),
-        endDate = endDate ?? startDate,
+        endDate = type.requiresDuration
+            ? (endDate ?? startDate.add(const Duration(hours: 1)))
+            : startDate,
         metadata = metadata ?? EventMetadata(),
         tags = tags ?? [],
         createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+        updatedAt = updatedAt ?? DateTime.now() {
+    // Enforce endTime for duration-based events
+    if (type.requiresDuration && startTime != null) {
+      this.endTime = endTime ??
+          TimeOfDay(
+            hour: (startTime!.hour + 1) % 24,
+            minute: startTime!.minute,
+          );
+    }
+  }
 
   // Copy with method for immutability
   CalendarEvent copyWith({

@@ -5,24 +5,44 @@ import 'food_form_fields.dart';
 class EventTypeTimeSection extends StatelessWidget {
   final EventType? selectedEventType;
   final TimeOfDay selectedTime;
+  final TimeOfDay? selectedEndTime;
+  final bool showEndTime;
   final Function(EventType?) onEventTypeChanged;
   final Function() onTimePressed;
+  final Function() onEndTimePressed;
 
   const EventTypeTimeSection({
     super.key,
     required this.selectedEventType,
     required this.selectedTime,
+    this.selectedEndTime,
+    this.showEndTime = false,
     required this.onEventTypeChanged,
     required this.onTimePressed,
+    required this.onEndTimePressed,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Expanded(child: _buildEventTypeDropdown()),
-        const SizedBox(width: 16),
-        Expanded(child: _buildTimeSelector(context)),
+        Row(
+          children: [
+            Expanded(child: _buildEventTypeDropdown()),
+            const SizedBox(width: 16),
+            Expanded(child: _buildTimeSelector(context)),
+          ],
+        ),
+        if (showEndTime) ...[
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              const Spacer(),
+              const SizedBox(width: 16),
+              Expanded(child: _buildEndTimeSelector(context)),
+            ],
+          ),
+        ],
       ],
     );
   }
@@ -47,8 +67,18 @@ class EventTypeTimeSection extends StatelessWidget {
     return InkWell(
       onTap: onTimePressed,
       child: InputDecorator(
-        decoration: FoodFormFields.getInputDecoration('Time'),
+        decoration: FoodFormFields.getInputDecoration('Start Time'),
         child: Text(selectedTime.format(context)),
+      ),
+    );
+  }
+
+  Widget _buildEndTimeSelector(BuildContext context) {
+    return InkWell(
+      onTap: onEndTimePressed,
+      child: InputDecorator(
+        decoration: FoodFormFields.getInputDecoration('End Time'),
+        child: Text(selectedEndTime?.format(context) ?? 'Select End Time'),
       ),
     );
   }

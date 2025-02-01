@@ -34,6 +34,7 @@ class _FoodEventFormState extends State<FoodEventForm> {
   late final TextEditingController _fatController;
   late final TextEditingController _ingredientController;
   late TimeOfDay _selectedTime;
+  late TimeOfDay? _selectedEndTime;
   EventType? _selectedEventType;
   final List<String> _ingredients = [];
 
@@ -70,6 +71,7 @@ class _FoodEventFormState extends State<FoodEventForm> {
     );
     _ingredientController = TextEditingController();
     _selectedTime = event?.startTime ?? TimeOfDay.now();
+    _selectedEndTime = event?.endTime;
     _selectedEventType = event?.type ?? EventType.meal;
 
     if (metadata != null) {
@@ -93,13 +95,27 @@ class _FoodEventFormState extends State<FoodEventForm> {
     _ingredientController.dispose();
   }
 
-  Future<void> _selectTime(BuildContext context) async {
+  Future<void> _selectTime(BuildContext context,
+      {bool isEndTime = false}) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: _selectedTime,
+      initialTime:
+          isEndTime ? (_selectedEndTime ?? _selectedTime) : _selectedTime,
     );
-    if (picked != null && picked != _selectedTime) {
-      setState(() => _selectedTime = picked);
+    if (picked != null) {
+      setState(() {
+        if (isEndTime) {
+          _selectedEndTime = picked;
+        } else {
+          _selectedTime = picked;
+          if (_selectedEventType?.requiresDuration == true) {
+            _selectedEndTime = TimeOfDay(
+              hour: (picked.hour + 1) % 24,
+              minute: picked.minute,
+            );
+          }
+        }
+      });
     }
   }
 
@@ -134,6 +150,7 @@ class _FoodEventFormState extends State<FoodEventForm> {
       description: _descriptionController.text,
       startDate: widget.selectedDate,
       startTime: _selectedTime,
+      endTime: _selectedEndTime,
       type: _selectedEventType ?? EventType.meal,
       metadata: metadata,
     );
@@ -148,9 +165,23 @@ class _FoodEventFormState extends State<FoodEventForm> {
         eventTypeSection: EventTypeTimeSection(
           selectedEventType: _selectedEventType,
           selectedTime: _selectedTime,
-          onEventTypeChanged: (value) =>
-              setState(() => _selectedEventType = value),
+          selectedEndTime: _selectedEndTime,
+          showEndTime: _selectedEventType?.requiresDuration == true,
+          onEventTypeChanged: (value) {
+            setState(() {
+              _selectedEventType = value;
+              if (value?.requiresDuration == true) {
+                _selectedEndTime = TimeOfDay(
+                  hour: (_selectedTime.hour + 1) % 24,
+                  minute: _selectedTime.minute,
+                );
+              } else {
+                _selectedEndTime = null;
+              }
+            });
+          },
           onTimePressed: () => _selectTime(context),
+          onEndTimePressed: () => _selectTime(context, isEndTime: true),
         ),
         nutritionFields: NutritionFields(
           caloriesController: _caloriesController,
