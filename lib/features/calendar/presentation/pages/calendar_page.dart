@@ -10,20 +10,19 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  bool _isSyncing = false;
-
   void _handleEventsChanged(List<Event> events) {
     // Handle events changed if needed
   }
 
   void _handleSyncStateChanged(bool isSyncing) {
-    setState(() => _isSyncing = isSyncing);
+    // Handle sync state if needed
   }
 
   @override
   Widget build(BuildContext context) {
     return CalendarScreen(
       onEventsChanged: _handleEventsChanged,
+      onSyncStateChanged: _handleSyncStateChanged,
     );
   }
 }

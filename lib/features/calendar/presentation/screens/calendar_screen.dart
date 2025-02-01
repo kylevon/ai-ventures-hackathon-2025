@@ -6,10 +6,12 @@ import '../widgets/event_details_dialog.dart';
 
 class CalendarScreen extends StatefulWidget {
   final Function(List<Event>) onEventsChanged;
+  final Function(bool) onSyncStateChanged;
 
   const CalendarScreen({
     super.key,
     required this.onEventsChanged,
+    required this.onSyncStateChanged,
   });
 
   @override
@@ -40,6 +42,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   void _handleSyncStateChanged(bool isSyncing) {
     setState(() => _isLoading = isSyncing);
+    widget.onSyncStateChanged(isSyncing);
   }
 
   void _handleEventsChanged(List<Event> events) {

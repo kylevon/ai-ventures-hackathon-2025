@@ -25,6 +25,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   late DateTime _focusedDay;
   late DateTime _selectedDay;
   late Map<DateTime, List<Event>> _groupedEvents;
+  DateTime? _hoveredDay;
 
   @override
   void initState() {
@@ -97,6 +98,52 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     );
   }
 
+  Widget _buildDay(BuildContext context, DateTime day, DateTime focusedDay) {
+    final isSelected = isSameDay(_selectedDay, day);
+    final isToday = isSameDay(day, DateTime.now());
+    final isHovered = isSameDay(_hoveredDay, day);
+    final events = _getEventsForDay(day);
+    final hasEvents = events.isNotEmpty;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hoveredDay = day),
+      onExit: (_) => setState(() => _hoveredDay = null),
+      child: Container(
+        margin: const EdgeInsets.all(4.0),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Theme.of(context).primaryColor.withOpacity(0.7)
+              : isToday
+                  ? Theme.of(context).primaryColor.withOpacity(0.3)
+                  : isHovered
+                      ? Theme.of(context).hoverColor
+                      : Colors.transparent,
+          shape: BoxShape.circle,
+          border: hasEvents
+              ? Border.all(
+                  color: events.first.color,
+                  width: 2,
+                )
+              : null,
+        ),
+        child: Center(
+          child: Text(
+            '${day.day}',
+            style: TextStyle(
+              fontWeight:
+                  isSelected || isToday ? FontWeight.bold : FontWeight.normal,
+              color: isSelected
+                  ? Colors.white
+                  : isToday
+                      ? Theme.of(context).primaryColor
+                      : null,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectedDayEvents = _getEventsForDay(_selectedDay);
@@ -114,14 +161,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           calendarStyle: CalendarStyle(
             markersMaxCount: 1,
             markerDecoration: const BoxDecoration(color: Colors.transparent),
-            selectedDecoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-              shape: BoxShape.circle,
-            ),
-            todayDecoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withOpacity(0.5),
-              shape: BoxShape.circle,
-            ),
+            selectedDecoration: const BoxDecoration(color: Colors.transparent),
+            todayDecoration: const BoxDecoration(color: Colors.transparent),
             outsideDaysVisible: false,
           ),
           headerStyle: CalendarStyleConfig.headerStyle,
@@ -131,24 +172,12 @@ class _CalendarWidgetState extends State<CalendarWidget> {
             setState(() => _focusedDay = focusedDay);
           },
           calendarBuilders: CalendarBuilders(
+            defaultBuilder: _buildDay,
+            selectedBuilder: _buildDay,
+            todayBuilder: _buildDay,
             markerBuilder: (context, date, events) {
               if (events.isEmpty) return null;
               return _buildEventsMarker(date, events.cast<Event>().toList());
-            },
-            selectedBuilder: (context, date, _) {
-              return Container(
-                margin: const EdgeInsets.all(4.0),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Text(
-                    '${date.day}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              );
             },
           ),
         ),
