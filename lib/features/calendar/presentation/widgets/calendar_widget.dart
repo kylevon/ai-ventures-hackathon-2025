@@ -25,6 +25,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   late DateTime _selectedDay;
   late PageController _pageController;
   late Map<DateTime, List<CalendarEvent>> _groupedEvents;
+  CalendarFormat _calendarFormat = CalendarFormat.month;
 
   @override
   void initState() {
@@ -68,7 +69,12 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           lastDay: DateTime.utc(2030, 12, 31),
           focusedDay: _focusedDay,
           selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-          calendarFormat: CalendarFormat.month,
+          calendarFormat: _calendarFormat,
+          onFormatChanged: (format) {
+            setState(() {
+              _calendarFormat = format;
+            });
+          },
           eventLoader: _getEventsForDay,
           startingDayOfWeek: StartingDayOfWeek.monday,
           calendarStyle: CalendarStyle(
@@ -108,7 +114,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 ],
               ),
               const SizedBox(height: 8),
-              ..._getEventsForDay(_selectedDay).map((event) => _buildEventCard(event)),
+              ..._getEventsForDay(_selectedDay)
+                  .map((event) => _buildEventCard(event)),
             ],
           ),
         ),
@@ -192,4 +199,4 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     _pageController.dispose();
     super.dispose();
   }
-} 
+}
