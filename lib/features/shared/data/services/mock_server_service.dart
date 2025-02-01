@@ -18,21 +18,21 @@ class MockServerService {
     if (_isInitialized) return;
 
     try {
-      // Get next Saturday
-      final now = DateTime.now();
-      final daysUntilSaturday = (DateTime.saturday - now.weekday) % 7;
-      final nextSaturday = now.add(Duration(days: daysUntilSaturday));
+      // February 1st and 2nd, 2025
+      final feb1 = DateTime(2025, 2, 1);
+      final feb2 = DateTime(2025, 2, 2);
 
       final events = [
+        // February 1st Events
         // Morning croissants
         Event(
           id: '1',
           title: 'Croissants',
           description: 'Morning croissants',
           date: DateTime(
-            nextSaturday.year,
-            nextSaturday.month,
-            nextSaturday.day,
+            feb1.year,
+            feb1.month,
+            feb1.day,
             10, // 10:00 AM
             0,
           ),
@@ -44,9 +44,9 @@ class MockServerService {
           title: 'Chicken and Beans and Rice burrito',
           description: 'Lunch burrito',
           date: DateTime(
-            nextSaturday.year,
-            nextSaturday.month,
-            nextSaturday.day,
+            feb1.year,
+            feb1.month,
+            feb1.day,
             13, // 1:00 PM
             0,
           ),
@@ -58,9 +58,9 @@ class MockServerService {
           title: 'Chicken and rice',
           description: 'Dinner',
           date: DateTime(
-            nextSaturday.year,
-            nextSaturday.month,
-            nextSaturday.day,
+            feb1.year,
+            feb1.month,
+            feb1.day,
             19, // 7:00 PM
             0,
           ),
@@ -72,9 +72,9 @@ class MockServerService {
           title: 'Metformin',
           description: 'Morning medication',
           date: DateTime(
-            nextSaturday.year,
-            nextSaturday.month,
-            nextSaturday.day,
+            feb1.year,
+            feb1.month,
+            feb1.day,
             9, // 9:00 AM
             0,
           ),
@@ -86,13 +86,54 @@ class MockServerService {
           title: 'Very sleepy and tired',
           description: 'Feeling very sleepy and tired',
           date: DateTime(
-            nextSaturday.year,
-            nextSaturday.month,
-            nextSaturday.day,
+            feb1.year,
+            feb1.month,
+            feb1.day,
             12, // 12:30 PM
             30,
           ),
           type: EventType.symptoms,
+        ),
+
+        // February 2nd Events
+        Event(
+          id: '6',
+          title: 'Metformin',
+          description: 'Morning medication',
+          date: DateTime(
+            feb2.year,
+            feb2.month,
+            feb2.day,
+            8, // 8:00 AM
+            0,
+          ),
+          type: EventType.pills,
+        ),
+        Event(
+          id: '7',
+          title: 'Omelette',
+          description: 'Breakfast',
+          date: DateTime(
+            feb2.year,
+            feb2.month,
+            feb2.day,
+            10, // 10:00 AM
+            0,
+          ),
+          type: EventType.food,
+        ),
+        Event(
+          id: '8',
+          title: 'Chicken and rice',
+          description: 'Lunch',
+          date: DateTime(
+            feb2.year,
+            feb2.month,
+            feb2.day,
+            12, // 12:30 PM
+            30,
+          ),
+          type: EventType.food,
         ),
       ];
 
