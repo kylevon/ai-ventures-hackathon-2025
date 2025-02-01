@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../domain/models/calendar_event.dart';
 import '../../domain/models/food_event.dart';
-import '../../data/services/mock_event_service.dart';
 import 'food_event_form.dart';
 
 class EventDetailsDialog extends StatefulWidget {
@@ -39,6 +38,9 @@ class _EventDetailsDialogState extends State<EventDetailsDialog> {
     setState(() => _isSaving = true);
     try {
       await widget.onUpdate(updatedEvent);
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
     } finally {
       if (mounted) {
         setState(() => _isSaving = false);
@@ -80,15 +82,24 @@ class _EventDetailsDialogState extends State<EventDetailsDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: _isDeleting ? null : () => _handleDelete(),
-          child: const Text('Delete'),
+          onPressed: _isDeleting || _isSaving ? null : () => _handleDelete(),
+          child: _isDeleting
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Text('Delete'),
         ),
         TextButton(
-          onPressed: () => _handleEdit(context),
+          onPressed:
+              _isDeleting || _isSaving ? null : () => _handleEdit(context),
           child: const Text('Edit'),
         ),
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: _isDeleting || _isSaving
+              ? null
+              : () => Navigator.of(context).pop(),
           child: const Text('Close'),
         ),
       ],

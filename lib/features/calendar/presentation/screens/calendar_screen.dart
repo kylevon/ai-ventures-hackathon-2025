@@ -42,11 +42,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     }
   }
 
-  void _handleDaySelected(DateTime selectedDay) {
-    // Don't automatically show add dialog when a day is selected
-    // Only show add dialog when explicitly requested through the add button
-  }
-
   void _handleEventTap(CalendarEvent event) {
     showDialog(
       context: context,

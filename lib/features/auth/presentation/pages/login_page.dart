@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import '../theme/auth_theme.dart';
+import 'package:michro_flutter/core/theme/app_theme.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/services/auth_service.dart';
 
@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: AuthTheme.gray[100],
+      backgroundColor: AppTheme.gray[100],
       body: Stack(
         children: [
           // Animated circles
@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     height: 20 - (index * 1.5),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AuthTheme.orbitColors[index],
+                      color: AppTheme.orbitColors[index],
                     ),
                   ),
                 );
@@ -140,10 +140,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AuthTheme.gray[100],
+                        color: AppTheme.gray[100],
                         boxShadow: [
                           BoxShadow(
-                            color: AuthTheme.primary[900]!.withOpacity(0.1),
+                            color: AppTheme.primary[900]!.withOpacity(0.1),
                             blurRadius: 20,
                             spreadRadius: 5,
                           ),
@@ -161,7 +161,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     opacity: _titleOpacityAnimation,
                     child: const Text(
                       'chronobiology in your pocket',
-                      style: AuthTheme.titleStyle,
+                      style: AppTheme.titleStyle,
                     ),
                   ),
                   const SizedBox(height: 48),
@@ -178,7 +178,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       children: [
                         TextField(
                           controller: _emailController,
-                          decoration: AuthTheme.inputDecoration('Email'),
+                          decoration: AppTheme.inputDecoration('Email'),
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
                           enabled: !_isLoading,
@@ -186,7 +186,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         const SizedBox(height: 16),
                         TextField(
                           controller: _passwordController,
-                          decoration: AuthTheme.inputDecoration('Password'),
+                          decoration: AppTheme.inputDecoration('Password'),
                           obscureText: true,
                           textInputAction: TextInputAction.done,
                           enabled: !_isLoading,
@@ -195,7 +195,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         const SizedBox(height: 24),
                         ElevatedButton(
                           onPressed: _isLoading ? null : _handleLogin,
-                          style: AuthTheme.primaryButtonStyle,
+                          style: AppTheme.primaryButtonStyle,
                           child: _isLoading
                               ? SizedBox(
                                   width: 24,
@@ -203,12 +203,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                      AuthTheme.gray[100]!,
+                                      AppTheme.gray[100]!,
                                     ),
                                   ),
                                 )
-                              : Text('Log in',
-                                  style: AuthTheme.buttonTextStyle),
+                              : Text('Log in', style: AppTheme.buttonTextStyle),
                         ),
                         const SizedBox(height: 16),
                         TextButton(
@@ -219,7 +218,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 },
                           child: Text(
                             'Register',
-                            style: AuthTheme.registerButtonTextStyle,
+                            style: AppTheme.registerButtonTextStyle,
                           ),
                         ),
                       ],

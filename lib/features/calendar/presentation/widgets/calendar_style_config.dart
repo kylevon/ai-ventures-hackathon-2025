@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import '../../../auth/presentation/theme/auth_theme.dart';
+import 'package:michro_flutter/core/theme/app_theme.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarStyleConfig {
   static CalendarStyle get calendarStyle => CalendarStyle(
         markersMaxCount: 3,
         markerDecoration: BoxDecoration(
-          color: AuthTheme.primary[500],
+          color: AppTheme.primary[500],
           shape: BoxShape.circle,
         ),
         selectedDecoration: BoxDecoration(
-          color: AuthTheme.primary[500],
+          color: AppTheme.primary[500],
           shape: BoxShape.circle,
         ),
         todayDecoration: BoxDecoration(
-          color: AuthTheme.primary[500]!.withOpacity(0.5),
+          color: AppTheme.primary[500]!.withOpacity(0.5),
           shape: BoxShape.circle,
         ),
         weekendTextStyle: TextStyle(color: Colors.grey[600]),
@@ -27,15 +27,14 @@ class CalendarStyleConfig {
         titleCentered: true,
         formatButtonVisible: true,
         formatButtonDecoration: BoxDecoration(
-          color: AuthTheme.primary[500]!.withOpacity(0.1),
+          color: AppTheme.primary[500]!.withOpacity(0.1),
           borderRadius: BorderRadius.circular(12),
         ),
-        formatButtonTextStyle: TextStyle(color: AuthTheme.primary[500]),
+        formatButtonTextStyle: TextStyle(color: AppTheme.primary[500]),
         formatButtonShowsNext: false,
-        leftChevronIcon:
-            Icon(Icons.chevron_left, color: AuthTheme.primary[500]),
+        leftChevronIcon: Icon(Icons.chevron_left, color: AppTheme.primary[500]),
         rightChevronIcon:
-            Icon(Icons.chevron_right, color: AuthTheme.primary[500]),
+            Icon(Icons.chevron_right, color: AppTheme.primary[500]),
       );
 
   static DaysOfWeekStyle get daysOfWeekStyle => DaysOfWeekStyle(

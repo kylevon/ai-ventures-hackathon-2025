@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../auth/presentation/theme/auth_theme.dart';
+import 'package:michro_flutter/core/theme/app_theme.dart';
 
 class InputPage extends StatelessWidget {
   const InputPage({super.key});
@@ -20,7 +20,7 @@ class InputPage extends StatelessWidget {
                 Icon(
                   Icons.add_circle_outline,
                   size: 64,
-                  color: AuthTheme.primary[500],
+                  color: AppTheme.primary[500],
                 ),
                 const SizedBox(height: 16),
                 const Text(

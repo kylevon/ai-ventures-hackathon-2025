@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../auth/presentation/theme/auth_theme.dart';
+import 'package:michro_flutter/core/theme/app_theme.dart';
 
 class AuthenticatedLayout extends StatelessWidget {
   final Widget child;
@@ -43,8 +43,8 @@ class AuthenticatedLayout extends StatelessWidget {
               label: 'Review',
             ),
           ],
-          selectedItemColor: AuthTheme.primary[500],
-          unselectedItemColor: AuthTheme.gray[400],
+          selectedItemColor: AppTheme.primary[500],
+          unselectedItemColor: AppTheme.gray[400],
           showUnselectedLabels: true,
         ),
       ),
@@ -79,9 +79,9 @@ class AuthenticatedLayout extends StatelessWidget {
       default:
         path = '/input';
     }
-    
+
     if (path != currentPath) {
       context.go(path);
     }
   }
-} 
+}

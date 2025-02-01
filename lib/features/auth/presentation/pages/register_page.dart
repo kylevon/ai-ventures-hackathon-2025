@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import '../theme/auth_theme.dart';
+import 'package:michro_flutter/core/theme/app_theme.dart';
 import 'package:go_router/go_router.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -168,7 +168,7 @@ class _RegisterPageState extends State<RegisterPage>
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: AuthTheme.gray[100],
+      backgroundColor: AppTheme.gray[100],
       body: Stack(
         children: [
           // Animated circles
@@ -193,7 +193,7 @@ class _RegisterPageState extends State<RegisterPage>
                     height: 20 - (index * 1.5),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AuthTheme.orbitColors[index],
+                      color: AppTheme.orbitColors[index],
                     ),
                   ),
                 );
@@ -216,10 +216,10 @@ class _RegisterPageState extends State<RegisterPage>
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AuthTheme.gray[100],
+                        color: AppTheme.gray[100],
                         boxShadow: [
                           BoxShadow(
-                            color: AuthTheme.primary[900]!.withOpacity(0.1),
+                            color: AppTheme.primary[900]!.withOpacity(0.1),
                             blurRadius: 20,
                             spreadRadius: 5,
                           ),
@@ -237,7 +237,7 @@ class _RegisterPageState extends State<RegisterPage>
                     opacity: _titleOpacityAnimation,
                     child: const Text(
                       'Create your account',
-                      style: AuthTheme.titleStyle,
+                      style: AppTheme.titleStyle,
                     ),
                   ),
                   const SizedBox(height: 48),
@@ -257,7 +257,7 @@ class _RegisterPageState extends State<RegisterPage>
                         children: [
                           TextFormField(
                             controller: _nameController,
-                            decoration: AuthTheme.inputDecoration('Full Name'),
+                            decoration: AppTheme.inputDecoration('Full Name'),
                             validator: (value) => value?.isEmpty == true
                                 ? 'Please enter your name'
                                 : null,
@@ -265,7 +265,7 @@ class _RegisterPageState extends State<RegisterPage>
                           const SizedBox(height: 16),
                           TextFormField(
                             controller: _emailController,
-                            decoration: AuthTheme.inputDecoration('Email'),
+                            decoration: AppTheme.inputDecoration('Email'),
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) => value?.isEmpty == true
                                 ? 'Please enter your email'
@@ -274,7 +274,7 @@ class _RegisterPageState extends State<RegisterPage>
                           const SizedBox(height: 16),
                           TextFormField(
                             controller: _passwordController,
-                            decoration: AuthTheme.inputDecoration('Password'),
+                            decoration: AppTheme.inputDecoration('Password'),
                             obscureText: true,
                             validator: (value) => value?.isEmpty == true
                                 ? 'Please enter a password'
@@ -284,7 +284,7 @@ class _RegisterPageState extends State<RegisterPage>
                           TextFormField(
                             controller: _dateController,
                             decoration:
-                                AuthTheme.inputDecoration('Date of Birth'),
+                                AppTheme.inputDecoration('Date of Birth'),
                             readOnly: true,
                             onTap: () => _selectDate(context),
                             validator: (value) => value?.isEmpty == true
@@ -298,7 +298,7 @@ class _RegisterPageState extends State<RegisterPage>
                                 child: TextFormField(
                                   controller: _heightController,
                                   decoration:
-                                      AuthTheme.inputDecoration('Height (cm)'),
+                                      AppTheme.inputDecoration('Height (cm)'),
                                   keyboardType: TextInputType.number,
                                   validator: (value) => value?.isEmpty == true
                                       ? 'Required'
@@ -310,7 +310,7 @@ class _RegisterPageState extends State<RegisterPage>
                                 child: TextFormField(
                                   controller: _weightController,
                                   decoration:
-                                      AuthTheme.inputDecoration('Weight (kg)'),
+                                      AppTheme.inputDecoration('Weight (kg)'),
                                   keyboardType: TextInputType.number,
                                   validator: (value) => value?.isEmpty == true
                                       ? 'Required'
@@ -322,7 +322,7 @@ class _RegisterPageState extends State<RegisterPage>
                           const SizedBox(height: 16),
                           DropdownButtonFormField<String>(
                             value: _selectedSex,
-                            decoration: AuthTheme.inputDecoration('Sex'),
+                            decoration: AppTheme.inputDecoration('Sex'),
                             items: sexOptions
                                 .map((sex) => DropdownMenuItem(
                                       value: sex,
@@ -338,7 +338,7 @@ class _RegisterPageState extends State<RegisterPage>
                           const SizedBox(height: 16),
                           DropdownButtonFormField<String>(
                             value: _selectedGender,
-                            decoration: AuthTheme.inputDecoration('Gender'),
+                            decoration: AppTheme.inputDecoration('Gender'),
                             items: genderOptions
                                 .map((gender) => DropdownMenuItem(
                                       value: gender,
@@ -365,7 +365,7 @@ class _RegisterPageState extends State<RegisterPage>
                               Expanded(
                                 child: TextFormField(
                                   controller: _diseaseController,
-                                  decoration: AuthTheme.inputDecoration(
+                                  decoration: AppTheme.inputDecoration(
                                       'Enter condition'),
                                 ),
                               ),
@@ -381,7 +381,7 @@ class _RegisterPageState extends State<RegisterPage>
                                   }
                                 },
                                 icon: const Icon(Icons.add_circle),
-                                color: AuthTheme.primary[500],
+                                color: AppTheme.primary[500],
                                 tooltip: 'Add condition',
                               ),
                             ],
@@ -435,7 +435,7 @@ class _RegisterPageState extends State<RegisterPage>
                           const SizedBox(height: 32),
                           ElevatedButton(
                             onPressed: _isLoading ? null : _handleRegister,
-                            style: AuthTheme.primaryButtonStyle,
+                            style: AppTheme.primaryButtonStyle,
                             child: _isLoading
                                 ? const SizedBox(
                                     width: 24,
@@ -447,7 +447,7 @@ class _RegisterPageState extends State<RegisterPage>
                                     ),
                                   )
                                 : Text('Register',
-                                    style: AuthTheme.buttonTextStyle),
+                                    style: AppTheme.buttonTextStyle),
                           ),
                           const SizedBox(height: 16),
                           TextButton(
@@ -455,7 +455,7 @@ class _RegisterPageState extends State<RegisterPage>
                                 _isLoading ? null : () => context.go('/login'),
                             child: Text(
                               'Already have an account? Login',
-                              style: AuthTheme.registerButtonTextStyle,
+                              style: AppTheme.registerButtonTextStyle,
                             ),
                           ),
                         ],

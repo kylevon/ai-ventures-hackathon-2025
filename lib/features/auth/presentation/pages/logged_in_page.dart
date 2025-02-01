@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/services/auth_service.dart';
-import '../theme/auth_theme.dart';
+import 'package:michro_flutter/core/theme/app_theme.dart';
 
 class LoggedInPage extends StatelessWidget {
   const LoggedInPage({super.key});
@@ -10,7 +10,7 @@ class LoggedInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final token = AuthService().token;
     final tokenParts = token?.split('.') ?? [];
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Logged In'),
@@ -42,8 +42,8 @@ class LoggedInPage extends StatelessWidget {
               Text(
                 'Successfully logged in!',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: AuthTheme.primary[700],
-                ),
+                      color: AppTheme.primary[700],
+                    ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 48),
@@ -59,7 +59,7 @@ class LoggedInPage extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AuthTheme.gray[200],
+                    color: AppTheme.gray[200],
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
@@ -104,4 +104,4 @@ class LoggedInPage extends StatelessWidget {
       ],
     );
   }
-} 
+}
