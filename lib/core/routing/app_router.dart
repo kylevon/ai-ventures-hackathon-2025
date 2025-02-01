@@ -5,6 +5,10 @@ import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/logged_in_page.dart';
 import '../../features/auth/data/services/auth_service.dart';
+import '../../features/shared/presentation/layouts/authenticated_layout.dart';
+import '../../features/calendar/presentation/pages/calendar_page.dart';
+import '../../features/input/presentation/pages/input_page.dart';
+import '../../features/review/presentation/pages/review_page.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -18,7 +22,7 @@ class AppRouter {
         return '/login';
       }
       if (isAuthenticated && isAuthRoute) {
-        return '/logged-in';
+        return '/input';
       }
       return null;
     },
@@ -32,12 +36,25 @@ class AppRouter {
         builder: (context, state) => const RegisterPage(),
       ),
       GoRoute(
-        path: '/logged-in',
-        builder: (context, state) => const LoggedInPage(),
+        path: '/calendar',
+        builder: (context, state) => AuthenticatedLayout(
+          currentPath: '/calendar',
+          child: const CalendarPage(),
+        ),
       ),
       GoRoute(
-        path: '/home',
-        builder: (context, state) => const HomePage(),
+        path: '/input',
+        builder: (context, state) => AuthenticatedLayout(
+          currentPath: '/input',
+          child: const InputPage(),
+        ),
+      ),
+      GoRoute(
+        path: '/review',
+        builder: (context, state) => AuthenticatedLayout(
+          currentPath: '/review',
+          child: const ReviewPage(),
+        ),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

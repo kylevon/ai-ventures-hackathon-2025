@@ -242,7 +242,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       );
       
       if (mounted) {
-        context.go('/logged-in');
+        context.go('/input');
       }
     } catch (e) {
       if (mounted) {
