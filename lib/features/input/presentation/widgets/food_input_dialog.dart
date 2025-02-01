@@ -62,8 +62,12 @@ class _FoodInputDialogState extends State<FoodInputDialog> {
         ),
         ElevatedButton.icon(
           onPressed: _handleSave,
-          icon: const Icon(Icons.restaurant_menu),
-          label: const Text('Add Food'),
+          icon: const Icon(Icons.send),
+          label: const Text('Send'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).primaryColor,
+            foregroundColor: Colors.white,
+          ),
         ),
       ],
     );
