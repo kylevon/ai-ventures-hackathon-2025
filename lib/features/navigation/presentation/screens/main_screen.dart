@@ -1,46 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../widgets/bottom_nav_bar.dart';
-import '../../../input/presentation/screens/input_screen.dart';
-import '../../../review/presentation/screens/review_screen.dart';
-import '../../../shared/presentation/pages/daily_tracking_page.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final Widget child;
+
+  const MainScreen({
+    super.key,
+    required this.child,
+  });
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
-
-  static const List<Widget> _screens = [
-    DailyTrackingPage(),
-    InputScreen(),
-    ReviewScreen(),
-  ];
+  int _getSelectedIndex(BuildContext context) {
+    final String location = GoRouterState.of(context).uri.path;
+    switch (location) {
+      case '/':
+        return 0;
+      case '/input':
+        return 1;
+      case '/review':
+        return 2;
+      default:
+        return 0;
+    }
+  }
 
   void _onDestinationSelected(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    switch (index) {
+      case 0:
+        context.go('/');
+        break;
+      case 1:
+        context.go('/input');
+        break;
+      case 2:
+        context.go('/review');
+        break;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildCurrentScreen(),
+      body: widget.child,
       bottomNavigationBar: BottomNavBar(
-        selectedIndex: _selectedIndex,
+        selectedIndex: _getSelectedIndex(context),
         onDestinationSelected: _onDestinationSelected,
       ),
-    );
-  }
-
-  Widget _buildCurrentScreen() {
-    return IndexedStack(
-      index: _selectedIndex,
-      children: _screens,
     );
   }
 }
