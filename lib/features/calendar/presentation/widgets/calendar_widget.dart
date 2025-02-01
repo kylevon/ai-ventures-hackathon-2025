@@ -152,7 +152,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       children: [
         TableCalendar<Event>(
           firstDay: DateTime.utc(2023, 1, 1),
-          lastDay: DateTime.utc(2024, 12, 31),
+          lastDay: DateTime.utc(2030, 12, 31),
           focusedDay: _focusedDay,
           selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
           calendarFormat: CalendarFormat.month,
