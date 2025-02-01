@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../domain/models/input_option.dart';
-import '../../pages/input_chat_page.dart';
+import '../../../../input_chat/presentation/pages/input_chat_page.dart';
 import 'circular_menu_layout.dart';
 import 'circular_menu_options.dart';
 

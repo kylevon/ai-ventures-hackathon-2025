@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import '../../../../core/constants/event_types.dart';
 
 part 'free_form_event.freezed.dart';
 part 'free_form_event.g.dart';
@@ -9,6 +10,7 @@ class FreeFormEvent with _$FreeFormEvent {
     required String id,
     required String description,
     required DateTime timestamp,
+    required EventType eventType,
   }) = _FreeFormEvent;
 
   factory FreeFormEvent.fromJson(Map<String, dynamic> json) =>

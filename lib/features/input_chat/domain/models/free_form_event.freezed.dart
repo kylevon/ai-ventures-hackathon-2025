@@ -23,6 +23,7 @@ mixin _$FreeFormEvent {
   String get id => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   DateTime get timestamp => throw _privateConstructorUsedError;
+  EventType get eventType => throw _privateConstructorUsedError;
 
   /// Serializes this FreeFormEvent to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -40,7 +41,8 @@ abstract class $FreeFormEventCopyWith<$Res> {
           FreeFormEvent value, $Res Function(FreeFormEvent) then) =
       _$FreeFormEventCopyWithImpl<$Res, FreeFormEvent>;
   @useResult
-  $Res call({String id, String description, DateTime timestamp});
+  $Res call(
+      {String id, String description, DateTime timestamp, EventType eventType});
 }
 
 /// @nodoc
@@ -61,6 +63,7 @@ class _$FreeFormEventCopyWithImpl<$Res, $Val extends FreeFormEvent>
     Object? id = null,
     Object? description = null,
     Object? timestamp = null,
+    Object? eventType = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -75,6 +78,10 @@ class _$FreeFormEventCopyWithImpl<$Res, $Val extends FreeFormEvent>
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      eventType: null == eventType
+          ? _value.eventType
+          : eventType // ignore: cast_nullable_to_non_nullable
+              as EventType,
     ) as $Val);
   }
 }
@@ -87,7 +94,8 @@ abstract class _$$FreeFormEventImplCopyWith<$Res>
       __$$FreeFormEventImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String description, DateTime timestamp});
+  $Res call(
+      {String id, String description, DateTime timestamp, EventType eventType});
 }
 
 /// @nodoc
@@ -106,6 +114,7 @@ class __$$FreeFormEventImplCopyWithImpl<$Res>
     Object? id = null,
     Object? description = null,
     Object? timestamp = null,
+    Object? eventType = null,
   }) {
     return _then(_$FreeFormEventImpl(
       id: null == id
@@ -120,6 +129,10 @@ class __$$FreeFormEventImplCopyWithImpl<$Res>
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      eventType: null == eventType
+          ? _value.eventType
+          : eventType // ignore: cast_nullable_to_non_nullable
+              as EventType,
     ));
   }
 }
@@ -128,7 +141,10 @@ class __$$FreeFormEventImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$FreeFormEventImpl implements _FreeFormEvent {
   const _$FreeFormEventImpl(
-      {required this.id, required this.description, required this.timestamp});
+      {required this.id,
+      required this.description,
+      required this.timestamp,
+      required this.eventType});
 
   factory _$FreeFormEventImpl.fromJson(Map<String, dynamic> json) =>
       _$$FreeFormEventImplFromJson(json);
@@ -139,10 +155,12 @@ class _$FreeFormEventImpl implements _FreeFormEvent {
   final String description;
   @override
   final DateTime timestamp;
+  @override
+  final EventType eventType;
 
   @override
   String toString() {
-    return 'FreeFormEvent(id: $id, description: $description, timestamp: $timestamp)';
+    return 'FreeFormEvent(id: $id, description: $description, timestamp: $timestamp, eventType: $eventType)';
   }
 
   @override
@@ -154,12 +172,15 @@ class _$FreeFormEventImpl implements _FreeFormEvent {
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.timestamp, timestamp) ||
-                other.timestamp == timestamp));
+                other.timestamp == timestamp) &&
+            (identical(other.eventType, eventType) ||
+                other.eventType == eventType));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, description, timestamp);
+  int get hashCode =>
+      Object.hash(runtimeType, id, description, timestamp, eventType);
 
   /// Create a copy of FreeFormEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -181,7 +202,8 @@ abstract class _FreeFormEvent implements FreeFormEvent {
   const factory _FreeFormEvent(
       {required final String id,
       required final String description,
-      required final DateTime timestamp}) = _$FreeFormEventImpl;
+      required final DateTime timestamp,
+      required final EventType eventType}) = _$FreeFormEventImpl;
 
   factory _FreeFormEvent.fromJson(Map<String, dynamic> json) =
       _$FreeFormEventImpl.fromJson;
@@ -192,6 +214,8 @@ abstract class _FreeFormEvent implements FreeFormEvent {
   String get description;
   @override
   DateTime get timestamp;
+  @override
+  EventType get eventType;
 
   /// Create a copy of FreeFormEvent
   /// with the given fields replaced by the non-null parameter values.
