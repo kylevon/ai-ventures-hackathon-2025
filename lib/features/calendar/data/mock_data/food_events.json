@@ -2,61 +2,61 @@
   "events": [
     {
       "id": "breakfast-1",
-      "title": "Oatmeal with Fruits",
-      "description": "Healthy breakfast with mixed berries",
+      "title": "Avocado Toast with Eggs",
+      "description": "Whole grain toast with smashed avocado and poached eggs",
       "startTime": "08:00",
       "type": "meal",
       "metadata": {
-        "calories": 350,
-        "protein": 12,
-        "carbs": 45,
-        "fat": 8,
-        "ingredients": ["Oats", "Milk", "Mixed berries", "Honey"],
+        "calories": 380,
+        "protein": 15,
+        "carbs": 35,
+        "fat": 22,
+        "ingredients": ["Whole grain bread", "Avocado", "Eggs", "Salt", "Pepper", "Red pepper flakes"],
         "mealType": "breakfast"
       }
     },
     {
       "id": "lunch-1",
-      "title": "Grilled Chicken Salad",
-      "description": "Fresh salad with grilled chicken breast",
+      "title": "Mediterranean Bowl",
+      "description": "Quinoa bowl with falafel and hummus",
       "startTime": "13:00",
       "type": "meal",
       "metadata": {
         "calories": 450,
-        "protein": 35,
-        "carbs": 20,
-        "fat": 15,
-        "ingredients": ["Chicken breast", "Mixed greens", "Olive oil", "Balsamic vinegar"],
+        "protein": 28,
+        "carbs": 48,
+        "fat": 18,
+        "ingredients": ["Quinoa", "Falafel", "Hummus", "Mixed greens", "Cherry tomatoes", "Cucumber", "Tahini dressing"],
         "mealType": "lunch"
       }
     },
     {
       "id": "dinner-1",
-      "title": "Salmon with Quinoa",
-      "description": "Baked salmon with quinoa and vegetables",
+      "title": "Teriyaki Glazed Salmon",
+      "description": "Asian-inspired salmon with stir-fried vegetables",
       "startTime": "19:00",
       "type": "meal",
       "metadata": {
-        "calories": 550,
-        "protein": 40,
-        "carbs": 35,
-        "fat": 25,
-        "ingredients": ["Salmon", "Quinoa", "Broccoli", "Lemon"],
+        "calories": 520,
+        "protein": 42,
+        "carbs": 30,
+        "fat": 28,
+        "ingredients": ["Salmon fillet", "Teriyaki sauce", "Brown rice", "Broccoli", "Bell peppers", "Snap peas"],
         "mealType": "dinner"
       }
     },
     {
       "id": "breakfast-2",
-      "title": "Greek Yogurt Parfait",
-      "description": "Yogurt with granola and honey",
+      "title": "Protein Smoothie Bowl",
+      "description": "Acai smoothie bowl with granola and fresh fruits",
       "startTime": "08:30",
       "type": "meal",
       "metadata": {
-        "calories": 300,
-        "protein": 15,
-        "carbs": 40,
-        "fat": 10,
-        "ingredients": ["Greek yogurt", "Granola", "Honey", "Almonds"],
+        "calories": 340,
+        "protein": 20,
+        "carbs": 45,
+        "fat": 12,
+        "ingredients": ["Acai", "Banana", "Protein powder", "Almond milk", "Granola", "Mixed berries", "Chia seeds"],
         "mealType": "breakfast"
       }
     }

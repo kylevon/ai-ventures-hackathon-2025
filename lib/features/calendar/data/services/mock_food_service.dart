@@ -3,139 +3,102 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../domain/models/calendar_event.dart';
 import '../../domain/models/food_event.dart';
+import 'mock_server_service.dart';
+import 'food_cache_service.dart';
 
 class MockFoodService {
   static final MockFoodService _instance = MockFoodService._internal();
   factory MockFoodService() => _instance;
   MockFoodService._internal();
 
-  final List<CalendarEvent> _events = [];
+  final _serverService = MockServerService();
+  final _cacheService = FoodCacheService();
 
-  // Initialize with data from JSON
-  Future<void> init() async {
-    _events.clear();
-    try {
-      // Load the JSON file
-      final String jsonString = await rootBundle.loadString(
-        'lib/features/calendar/data/mock_data/food_events.json',
-      );
-      final Map<String, dynamic> jsonData = json.decode(jsonString);
-      final List<dynamic> eventList = jsonData['events'];
-
-      // Get today's date for date-based events
-      final now = DateTime.now();
-      final tomorrow = DateTime(now.year, now.month, now.day + 1);
-
-      // Convert JSON events to CalendarEvent objects
-      for (var eventData in eventList) {
-        // Parse time string to TimeOfDay
-        final timeStr = eventData['startTime'].split(':');
-        final timeOfDay = TimeOfDay(
-          hour: int.parse(timeStr[0]),
-          minute: int.parse(timeStr[1]),
-        );
-
-        // Create metadata
-        final metadata = FoodMetadata(
-          calories: eventData['metadata']['calories']?.toDouble(),
-          protein: eventData['metadata']['protein']?.toDouble(),
-          carbs: eventData['metadata']['carbs']?.toDouble(),
-          fat: eventData['metadata']['fat']?.toDouble(),
-          ingredients: List<String>.from(eventData['metadata']['ingredients']),
-          mealType: eventData['metadata']['mealType'],
-        );
-
-        // Determine the date based on the event ID
-        final date = eventData['id'].contains('2') ? tomorrow : now;
-
-        // Create the event
-        final event = CalendarEvent(
-          id: eventData['id'],
-          title: eventData['title'],
-          description: eventData['description'],
-          startDate: date,
-          startTime: timeOfDay,
-          type: EventType.values.firstWhere(
-            (e) => e.name == eventData['type'],
-            orElse: () => EventType.custom,
-          ),
-          metadata: metadata,
-        );
-
-        _events.add(event);
-      }
-
-      print('Loaded ${_events.length} events from JSON');
-    } catch (e) {
-      print('Error loading events from JSON: $e');
-    }
+  // Fetch events from server and update cache
+  Future<List<CalendarEvent>> fetchEvents() async {
+    final events = await _serverService.get('/api/events');
+    _cacheService.updateCache(events);
+    return _cacheService.getAllEvents();
   }
 
-  // Get all events
-  List<CalendarEvent> getAllEvents() {
-    print('Getting all events: ${_events.length} events found');
-    return List.from(_events);
+  // Add event locally and send to server
+  Future<CalendarEvent> addEvent(CalendarEvent event) async {
+    // Generate a simple ID (in a real app, this would come from the server)
+    final newEvent = event.copyWith(
+      id: 'event-${DateTime.now().millisecondsSinceEpoch}',
+    );
+
+    // Update cache immediately
+    _cacheService.addEvent(newEvent);
+
+    // Send to server (but don't wait for response to update UI)
+    _serverService.post(
+      '/api/events',
+      data: {
+        'event': newEvent.toJson(),
+        'action': 'create',
+      },
+    );
+
+    return newEvent;
   }
 
-  // Get all events as JSON
-  List<Map<String, dynamic>> getAllEventsAsJson() {
-    return _events.map((event) => event.toJson()).toList();
+  // Update event locally and send to server
+  Future<CalendarEvent> updateEvent(CalendarEvent event) async {
+    // Update cache immediately
+    _cacheService.updateEvent(event);
+
+    // Send to server (but don't wait for response to update UI)
+    _serverService.put(
+      '/api/events/${event.id}',
+      data: {
+        'event': event.toJson(),
+        'action': 'update',
+      },
+    );
+
+    return event;
   }
 
-  // Get events for a specific day
-  List<CalendarEvent> getEventsForDay(DateTime day) {
-    final events = _events
-        .where((event) =>
-            event.startDate.year == day.year &&
-            event.startDate.month == day.month &&
-            event.startDate.day == day.day)
-        .toList();
-    print(
-        'Getting events for ${day.toString()}: ${events.length} events found');
-    return events;
+  // Delete event locally and send to server
+  Future<void> deleteEvent(String id) async {
+    // Update cache immediately
+    _cacheService.deleteEvent(id);
+
+    // Send to server (but don't wait for response to update UI)
+    _serverService.delete('/api/events/$id');
   }
 
-  // Add a new event
-  void addEvent(CalendarEvent event) {
-    _events.add(event);
+  // Get events from cache
+  List<CalendarEvent> getCachedEvents() {
+    return _cacheService.getAllEvents();
   }
 
-  // Update an existing event
-  void updateEvent(CalendarEvent event) {
-    final index = _events.indexWhere((e) => e.id == event.id);
-    if (index != -1) {
-      _events[index] = event;
-    }
+  // Check if cache needs sync
+  bool needsSync() {
+    return _cacheService.needsSync();
   }
+}
 
-  // Delete an event
-  void deleteEvent(String eventId) {
-    _events.removeWhere((event) => event.id == eventId);
-  }
-
-  // Get total calories for a day
-  double getTotalCaloriesForDay(DateTime day) {
-    return getEventsForDay(day)
-        .map((event) => (event.metadata as FoodMetadata).calories ?? 0)
-        .fold(0, (sum, calories) => sum + calories);
-  }
-
-  // Get nutritional summary for a day
-  Map<String, double> getNutritionalSummaryForDay(DateTime day) {
-    var events = getEventsForDay(day);
+extension CalendarEventJson on CalendarEvent {
+  Map<String, dynamic> toJson() {
+    final metadata = this.metadata as FoodMetadata;
     return {
-      'calories': events
-          .map((e) => (e.metadata as FoodMetadata).calories ?? 0)
-          .fold(0, (sum, val) => sum + val),
-      'protein': events
-          .map((e) => (e.metadata as FoodMetadata).protein ?? 0)
-          .fold(0, (sum, val) => sum + val),
-      'carbs': events
-          .map((e) => (e.metadata as FoodMetadata).carbs ?? 0)
-          .fold(0, (sum, val) => sum + val),
-      'fat': events
-          .map((e) => (e.metadata as FoodMetadata).fat ?? 0)
-          .fold(0, (sum, val) => sum + val),
+      'id': id,
+      'title': title,
+      'description': description,
+      'startDate': startDate.toIso8601String(),
+      'startTime':
+          startTime != null ? '${startTime!.hour}:${startTime!.minute}' : null,
+      'type': type.toString(),
+      'metadata': {
+        'calories': metadata.calories,
+        'protein': metadata.protein,
+        'carbs': metadata.carbs,
+        'fat': metadata.fat,
+        'ingredients': metadata.ingredients,
+        'mealType': metadata.mealType,
+      },
     };
   }
 }
