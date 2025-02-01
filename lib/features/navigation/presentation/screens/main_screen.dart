@@ -29,9 +29,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: _buildCurrentScreen(),
-      ),
+      body: _buildCurrentScreen(),
       bottomNavigationBar: BottomNavBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: _onDestinationSelected,

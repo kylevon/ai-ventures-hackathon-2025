@@ -29,15 +29,17 @@ class _DailyTrackingPageState extends State<DailyTrackingPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: TopNavigationBar(tabController: _tabController),
-      body: TabBarView(
-        controller: _tabController,
-        children: const [
-          CalendarPage(),
-          ClockPage(),
-          NutritionDashboardPage(),
-        ],
+    return SafeArea(
+      child: Scaffold(
+        appBar: TopNavigationBar(tabController: _tabController),
+        body: TabBarView(
+          controller: _tabController,
+          children: const [
+            CalendarPage(),
+            ClockPage(),
+            NutritionDashboardPage(),
+          ],
+        ),
       ),
     );
   }
