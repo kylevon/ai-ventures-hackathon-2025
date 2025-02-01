@@ -25,7 +25,6 @@ class FoodEventForm extends StatefulWidget {
 
 class _FoodEventFormState extends State<FoodEventForm> {
   final _formKey = GlobalKey<FormState>();
-  static const mealTypes = ['breakfast', 'lunch', 'dinner', 'snack'];
 
   late final TextEditingController _titleController;
   late final TextEditingController _descriptionController;
@@ -35,7 +34,7 @@ class _FoodEventFormState extends State<FoodEventForm> {
   late final TextEditingController _fatController;
   late final TextEditingController _ingredientController;
   late TimeOfDay _selectedTime;
-  String? _selectedMealType;
+  EventType? _selectedEventType;
   final List<String> _ingredients = [];
 
   @override
@@ -44,9 +43,15 @@ class _FoodEventFormState extends State<FoodEventForm> {
     _initializeControllers();
   }
 
+  FoodMetadata? _getFoodMetadata(CalendarEvent? event) {
+    if (event?.type != EventType.meal) return null;
+    if (event?.metadata is! FoodMetadata) return null;
+    return event?.metadata as FoodMetadata;
+  }
+
   void _initializeControllers() {
     final event = widget.event;
-    final metadata = event?.metadata as FoodMetadata?;
+    final metadata = _getFoodMetadata(event);
 
     _titleController = TextEditingController(text: event?.title ?? '');
     _descriptionController =
@@ -65,7 +70,7 @@ class _FoodEventFormState extends State<FoodEventForm> {
     );
     _ingredientController = TextEditingController();
     _selectedTime = event?.startTime ?? TimeOfDay.now();
-    _selectedMealType = metadata?.mealType;
+    _selectedEventType = event?.type ?? EventType.meal;
 
     if (metadata != null) {
       _ingredients.addAll(metadata.ingredients);
@@ -121,7 +126,6 @@ class _FoodEventFormState extends State<FoodEventForm> {
       carbs: double.tryParse(_carbsController.text),
       fat: double.tryParse(_fatController.text),
       ingredients: _ingredients,
-      mealType: _selectedMealType,
     );
 
     return CalendarEvent(
@@ -130,7 +134,7 @@ class _FoodEventFormState extends State<FoodEventForm> {
       description: _descriptionController.text,
       startDate: widget.selectedDate,
       startTime: _selectedTime,
-      type: EventType.meal,
+      type: _selectedEventType ?? EventType.meal,
       metadata: metadata,
     );
   }
@@ -141,12 +145,11 @@ class _FoodEventFormState extends State<FoodEventForm> {
       key: _formKey,
       child: FoodFormLayout(
         basicFields: _buildBasicFields(),
-        mealTimeSection: MealTimeSection(
-          selectedMealType: _selectedMealType,
+        eventTypeSection: EventTypeTimeSection(
+          selectedEventType: _selectedEventType,
           selectedTime: _selectedTime,
-          mealTypes: mealTypes,
-          onMealTypeChanged: (value) =>
-              setState(() => _selectedMealType = value),
+          onEventTypeChanged: (value) =>
+              setState(() => _selectedEventType = value),
           onTimePressed: () => _selectTime(context),
         ),
         nutritionFields: NutritionFields(

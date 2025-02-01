@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
+import '../../../domain/models/calendar_event.dart';
 import 'food_form_fields.dart';
 
-class MealTimeSection extends StatelessWidget {
-  final String? selectedMealType;
+class EventTypeTimeSection extends StatelessWidget {
+  final EventType? selectedEventType;
   final TimeOfDay selectedTime;
-  final List<String> mealTypes;
-  final Function(String?) onMealTypeChanged;
+  final Function(EventType?) onEventTypeChanged;
   final Function() onTimePressed;
 
-  const MealTimeSection({
+  const EventTypeTimeSection({
     super.key,
-    required this.selectedMealType,
+    required this.selectedEventType,
     required this.selectedTime,
-    required this.mealTypes,
-    required this.onMealTypeChanged,
+    required this.onEventTypeChanged,
     required this.onTimePressed,
   });
 
@@ -21,20 +20,26 @@ class MealTimeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: _buildMealTypeDropdown()),
+        Expanded(child: _buildEventTypeDropdown()),
         const SizedBox(width: 16),
         Expanded(child: _buildTimeSelector(context)),
       ],
     );
   }
 
-  Widget _buildMealTypeDropdown() {
-    return DropdownButtonFormField<String>(
-      value: selectedMealType,
-      decoration: FoodFormFields.getInputDecoration('Meal Type'),
-      items: FoodFormFields.getMealTypeItems(mealTypes),
-      onChanged: onMealTypeChanged,
-      validator: (value) => value == null ? 'Please select a meal type' : null,
+  Widget _buildEventTypeDropdown() {
+    return DropdownButtonFormField<EventType>(
+      value: selectedEventType,
+      decoration: FoodFormFields.getInputDecoration('Event Type'),
+      items: EventType.values
+          .map((type) => DropdownMenuItem(
+                value: type,
+                child: Text(type.displayName),
+              ))
+          .toList(),
+      onChanged: onEventTypeChanged,
+      validator: (value) =>
+          value == null ? 'Please select an event type' : null,
     );
   }
 

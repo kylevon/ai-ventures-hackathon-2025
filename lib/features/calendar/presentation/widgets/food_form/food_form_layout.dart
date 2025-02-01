@@ -5,7 +5,7 @@ import 'ingredients_section.dart';
 
 class FoodFormLayout extends StatelessWidget {
   final Widget basicFields;
-  final MealTimeSection mealTimeSection;
+  final EventTypeTimeSection eventTypeSection;
   final NutritionFields nutritionFields;
   final IngredientsSection ingredientsSection;
   final VoidCallback onSave;
@@ -13,7 +13,7 @@ class FoodFormLayout extends StatelessWidget {
   const FoodFormLayout({
     super.key,
     required this.basicFields,
-    required this.mealTimeSection,
+    required this.eventTypeSection,
     required this.nutritionFields,
     required this.ingredientsSection,
     required this.onSave,
@@ -25,7 +25,7 @@ class FoodFormLayout extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         _buildSection(basicFields),
-        _buildSection(mealTimeSection),
+        _buildSection(eventTypeSection),
         _buildSection(nutritionFields),
         _buildSection(ingredientsSection),
         _buildSaveButton(),

@@ -37,19 +37,27 @@ class _CalendarPageState extends State<CalendarPage> {
     final confirmed = await showDeleteEventDialog(context);
     if (confirmed == true && mounted) {
       await _controller.deleteEvent(event.id);
-      Navigator.of(dialogContext).pop();
-      _showSuccessMessage('Event deleted successfully');
+      if (dialogContext.mounted) {
+        Navigator.of(dialogContext).pop();
+        if (mounted) {
+          _showSuccessMessage('Event deleted successfully');
+        }
+      }
     }
   }
 
   Future<void> _handleEventUpdate(CalendarEvent event) async {
     await _controller.updateEvent(event);
-    _showSuccessMessage('Event updated successfully');
+    if (mounted) {
+      _showSuccessMessage('Event updated successfully');
+    }
   }
 
   Future<void> _handleEventAdd(CalendarEvent event) async {
     await _controller.addEvent(event);
-    _showSuccessMessage('Event added successfully');
+    if (mounted) {
+      _showSuccessMessage('Event added successfully');
+    }
   }
 
   void _showSuccessMessage(String message) {
@@ -101,7 +109,7 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget _buildCalendar() {
     return CalendarWidget(
       events: _events,
-      onDaySelected: (_) {},
+      onDaySelected: null,
       onEventTap: _showEditDialog,
       onAddEvent: _showAddDialog,
     );

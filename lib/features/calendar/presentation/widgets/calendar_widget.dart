@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:logging/logging.dart';
 import '../../domain/models/calendar_event.dart';
 import 'calendar_style_config.dart';
 import 'events_list.dart';
@@ -28,6 +29,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   late DateTime _selectedDay;
   late CalendarFormat _calendarFormat;
   late CalendarEventsManager _eventsManager;
+  final _logger = Logger('CalendarWidget');
 
   @override
   void initState() {
@@ -36,18 +38,26 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     _selectedDay = DateTime.now();
     _calendarFormat = CalendarFormat.month;
     _eventsManager = CalendarEventsManager(widget.events);
+    _logger.info('Calendar initialized with ${widget.events.length} events');
   }
 
   @override
   void didUpdateWidget(CalendarWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.events != widget.events) {
-      _eventsManager = CalendarEventsManager(widget.events);
+      _logger.info('Events updated: ${widget.events.length} events');
+      setState(() {
+        _eventsManager = CalendarEventsManager(widget.events);
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final eventsForSelectedDay = _eventsManager.getEventsForDay(_selectedDay);
+    _logger.info(
+        'Building calendar with ${eventsForSelectedDay.length} events for selected day');
+
     return Column(
       children: [
         _buildCalendar(),
@@ -55,7 +65,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         Expanded(
           child: EventsList(
             selectedDay: _selectedDay,
-            events: _eventsManager.getEventsForDay(_selectedDay),
+            events: eventsForSelectedDay,
             onEventTap: widget.onEventTap,
             onAddEvent: widget.onAddEvent,
           ),
