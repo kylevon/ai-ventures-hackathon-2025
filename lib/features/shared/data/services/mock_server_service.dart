@@ -18,27 +18,81 @@ class MockServerService {
     if (_isInitialized) return;
 
     try {
+      // Get next Saturday
+      final now = DateTime.now();
+      final daysUntilSaturday = (DateTime.saturday - now.weekday) % 7;
+      final nextSaturday = now.add(Duration(days: daysUntilSaturday));
+
       final events = [
+        // Morning croissants
         Event(
           id: '1',
-          title: 'Morning Pills',
-          description: 'Take morning medication',
-          date: DateTime.now().copyWith(hour: 8, minute: 0),
-          type: EventType.pills,
+          title: 'Croissants',
+          description: 'Morning croissants',
+          date: DateTime(
+            nextSaturday.year,
+            nextSaturday.month,
+            nextSaturday.day,
+            10, // 10:00 AM
+            0,
+          ),
+          type: EventType.food,
         ),
+        // Lunch burrito
         Event(
           id: '2',
-          title: 'Evening Pills',
-          description: 'Take evening medication',
-          date: DateTime.now().copyWith(hour: 20, minute: 0),
-          type: EventType.pills,
+          title: 'Chicken and Beans and Rice burrito',
+          description: 'Lunch burrito',
+          date: DateTime(
+            nextSaturday.year,
+            nextSaturday.month,
+            nextSaturday.day,
+            13, // 1:00 PM
+            0,
+          ),
+          type: EventType.food,
         ),
+        // Dinner
         Event(
           id: '3',
-          title: 'Morning Walk',
-          description: '30 minutes walk in the park',
-          date: DateTime.now().copyWith(hour: 7, minute: 30),
-          type: EventType.exercise,
+          title: 'Chicken and rice',
+          description: 'Dinner',
+          date: DateTime(
+            nextSaturday.year,
+            nextSaturday.month,
+            nextSaturday.day,
+            19, // 7:00 PM
+            0,
+          ),
+          type: EventType.food,
+        ),
+        // Metformin
+        Event(
+          id: '4',
+          title: 'Metformin',
+          description: 'Morning medication',
+          date: DateTime(
+            nextSaturday.year,
+            nextSaturday.month,
+            nextSaturday.day,
+            9, // 9:00 AM
+            0,
+          ),
+          type: EventType.pills,
+        ),
+        // Symptom
+        Event(
+          id: '5',
+          title: 'Very sleepy and tired',
+          description: 'Feeling very sleepy and tired',
+          date: DateTime(
+            nextSaturday.year,
+            nextSaturday.month,
+            nextSaturday.day,
+            12, // 12:30 PM
+            30,
+          ),
+          type: EventType.symptoms,
         ),
       ];
 
