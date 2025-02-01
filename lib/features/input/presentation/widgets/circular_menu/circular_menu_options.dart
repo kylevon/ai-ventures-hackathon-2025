@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:michro_flutter/core/theme/app_theme.dart';
+import '../../../../../core/constants/event_types.dart';
 import '../../../domain/models/input_option.dart';
 
 class CircularMenuOptions {
@@ -14,54 +14,31 @@ class CircularMenuOptions {
     return InputOption(
       icon: Icons.chat_bubble_outline,
       label: 'Chat',
-      color: AppTheme.primary[500]!,
+      color: EventType.misc.color,
       isCenter: true,
     );
   }
 
   static List<InputOption> _createSurroundingOptions() {
-    return [
-      _createOption(
-        Icons.restaurant_menu,
-        'Food',
-        AppTheme.primary[400]!,
-      ),
-      _createOption(
-        Icons.medication,
-        'Pills',
-        AppTheme.primary[500]!,
-      ),
-      _createOption(
-        Icons.mic,
-        'Voice',
-        AppTheme.primary[600]!,
-      ),
-      _createOption(
-        Icons.camera_alt,
-        'Camera',
-        AppTheme.primary[700]!,
-      ),
-      _createOption(
-        Icons.wc,
-        'Bowel',
-        AppTheme.primary[800]!,
-      ),
-      _createOption(
-        Icons.mood,
-        'Mood',
-        AppTheme.primary[300]!,
-      ),
-      _createOption(
-        Icons.water_drop,
-        'Menstrual',
-        AppTheme.primary[400]!,
-      ),
-      _createOption(
-        Icons.bedtime,
-        'Sleep',
-        AppTheme.primary[600]!,
-      ),
+    // Select 8 most important event types for the circular menu
+    final mainEventTypes = [
+      EventType.exercise,
+      EventType.sleep,
+      EventType.food,
+      EventType.liquids,
+      EventType.period,
+      EventType.bowelMovement,
+      EventType.mood,
+      EventType.symptoms,
     ];
+
+    return mainEventTypes
+        .map((eventType) => _createOption(
+              eventType.icon,
+              eventType.displayName,
+              eventType.color,
+            ))
+        .toList();
   }
 
   static InputOption _createOption(IconData icon, String label, Color color) {

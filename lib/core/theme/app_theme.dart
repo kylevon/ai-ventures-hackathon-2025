@@ -14,6 +14,139 @@ class AppTheme {
     900: Color(0xFF111919),
   };
 
+  // Event Type Colors
+  static const Map<int, Color> exercise = {
+    100: Color(0xFFE0E0E0), // Light black/grey
+    200: Color(0xFFBDBDBD),
+    300: Color(0xFF9E9E9E),
+    400: Color(0xFF757575),
+    500: Color(0xFF212121), // Black
+    600: Color(0xFF1B1B1B),
+    700: Color(0xFF151515),
+    800: Color(0xFF0F0F0F),
+    900: Color(0xFF090909),
+  };
+
+  static const Map<int, Color> sleep = {
+    100: Color(0xFFC5CAE9),
+    200: Color(0xFF9FA8DA),
+    300: Color(0xFF7986CB),
+    400: Color(0xFF5C6BC0),
+    500: Color(0xFF3F51B5),
+    600: Color(0xFF3949AB),
+    700: Color(0xFF303F9F),
+    800: Color(0xFF283593),
+    900: Color(0xFF1A237E),
+  };
+
+  static const Map<int, Color> food = {
+    100: Color(0xFFC8E6C9), // Light green
+    200: Color(0xFFA5D6A7),
+    300: Color(0xFF81C784),
+    400: Color(0xFF66BB6A),
+    500: Color(0xFF4CAF50), // Green
+    600: Color(0xFF43A047),
+    700: Color(0xFF388E3C),
+    800: Color(0xFF2E7D32),
+    900: Color(0xFF1B5E20),
+  };
+
+  static const Map<int, Color> liquids = {
+    100: Color(0xFFBBDEFB),
+    200: Color(0xFF90CAF9),
+    300: Color(0xFF64B5F6),
+    400: Color(0xFF42A5F5),
+    500: Color(0xFF2196F3),
+    600: Color(0xFF1E88E5),
+    700: Color(0xFF1976D2),
+    800: Color(0xFF1565C0),
+    900: Color(0xFF0D47A1),
+  };
+
+  static const Map<int, Color> period = {
+    100: Color(0xFFFCE4EC), // Light pink
+    200: Color(0xFFF8BBD0),
+    300: Color(0xFFF48FB1),
+    400: Color(0xFFF06292),
+    500: Color(0xFFEC407A), // Pink
+    600: Color(0xFFE91E63),
+    700: Color(0xFFD81B60),
+    800: Color(0xFFC2185B),
+    900: Color(0xFFAD1457),
+  };
+
+  static const Map<int, Color> bowelMovement = {
+    100: Color(0xFFD7CCC8),
+    200: Color(0xFFBCAAA4),
+    300: Color(0xFFA1887F),
+    400: Color(0xFF8D6E63),
+    500: Color(0xFF795548),
+    600: Color(0xFF6D4C41),
+    700: Color(0xFF5D4037),
+    800: Color(0xFF4E342E),
+    900: Color(0xFF3E2723),
+  };
+
+  static const Map<int, Color> heartRate = {
+    100: Color(0xFFFFCDD2),
+    200: Color(0xFFEF9A9A),
+    300: Color(0xFFE57373),
+    400: Color(0xFFEF5350),
+    500: Color(0xFFF44336),
+    600: Color(0xFFE53935),
+    700: Color(0xFFD32F2F),
+    800: Color(0xFFC62828),
+    900: Color(0xFFB71C1C),
+  };
+
+  static const Map<int, Color> appointments = {
+    100: Color(0xFFE1BEE7),
+    200: Color(0xFFCE93D8),
+    300: Color(0xFFBA68C8),
+    400: Color(0xFFAB47BC),
+    500: Color(0xFF9C27B0),
+    600: Color(0xFF8E24AA),
+    700: Color(0xFF7B1FA2),
+    800: Color(0xFF6A1B9A),
+    900: Color(0xFF4A148C),
+  };
+
+  static const Map<int, Color> mood = {
+    100: Color(0xFFB2DFDB),
+    200: Color(0xFF80CBC4),
+    300: Color(0xFF4DB6AC),
+    400: Color(0xFF26A69A),
+    500: Color(0xFF009688),
+    600: Color(0xFF00897B),
+    700: Color(0xFF00796B),
+    800: Color(0xFF00695C),
+    900: Color(0xFF004D40),
+  };
+
+  static const Map<int, Color> symptoms = {
+    100: Color(0xFFFFEBEE), // Lightest red
+    200: Color(0xFFFFCDD2),
+    300: Color(0xFFEF9A9A),
+    400: Color(0xFFE57373),
+    500: Color(0xFFEF5350), // Warning red
+    600: Color(0xFFE53935),
+    700: Color(0xFFD32F2F),
+    800: Color(0xFFC62828),
+    900: Color(0xFFB71C1C), // Darkest red
+  };
+
+  static const Map<int, Color> misc = {
+    100: Color(0xFFF5F5F5),
+    200: Color(0xFFEEEEEE),
+    300: Color(0xFFE0E0E0),
+    400: Color(0xFFBDBDBD),
+    500: Color(0xFF9E9E9E),
+    600: Color(0xFF757575),
+    700: Color(0xFF616161),
+    800: Color(0xFF424242),
+    900: Color(0xFF212121),
+  };
+
   // Gray Colors
   static const Map<int, Color> gray = {
     100: Color(0xFFf8fafa),
