@@ -24,6 +24,8 @@ class _MainScreenState extends State<MainScreen> {
         return 1;
       case '/review':
         return 2;
+      case '/connect':
+        return 3;
       default:
         return 0;
     }
@@ -39,6 +41,9 @@ class _MainScreenState extends State<MainScreen> {
         break;
       case 2:
         context.go('/review');
+        break;
+      case 3:
+        context.go('/connect');
         break;
     }
   }

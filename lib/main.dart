@@ -7,6 +7,7 @@ import 'features/navigation/presentation/screens/main_screen.dart';
 import 'features/input/presentation/screens/input_screen.dart';
 import 'features/review/presentation/screens/review_screen.dart';
 import 'features/shared/presentation/pages/daily_tracking_page.dart';
+import 'features/connect/presentation/pages/connect_page.dart';
 
 final _router = GoRouter(
   initialLocation: '/',
@@ -25,6 +26,10 @@ final _router = GoRouter(
         GoRoute(
           path: '/review',
           builder: (context, state) => const ReviewScreen(),
+        ),
+        GoRoute(
+          path: '/connect',
+          builder: (context, state) => const ConnectPage(),
         ),
       ],
     ),
