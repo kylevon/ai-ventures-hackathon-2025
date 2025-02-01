@@ -1,42 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:michro_flutter/core/theme/app_theme.dart';
+import '../widgets/management_buttons/management_buttons_row.dart';
+import '../widgets/circular_menu/circular_menu.dart';
 
 class InputPage extends StatelessWidget {
   const InputPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return CustomScrollView(
+  Widget build(BuildContext context) => _buildPage();
+
+  Widget _buildPage() {
+    return const CustomScrollView(
       slivers: [
-        const SliverAppBar(
-          title: Text('Input Data'),
-          floating: true,
+        SliverToBoxAdapter(
+          child: ManagementButtonsRow(),
         ),
         SliverFillRemaining(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.add_circle_outline,
-                  size: 64,
-                  color: AppTheme.primary[500],
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Input Data',
-                  style: TextStyle(fontSize: 24),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Coming soon...',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          child: CircularMenu(),
         ),
       ],
     );

@@ -34,7 +34,7 @@ class BottomNavBar extends StatelessWidget {
       _buildDestination(
         icon: Icons.add_circle_outline,
         selectedIcon: Icons.add_circle,
-        label: 'Input',
+        label: 'Track',
       ),
       _buildDestination(
         icon: Icons.analytics_outlined,
