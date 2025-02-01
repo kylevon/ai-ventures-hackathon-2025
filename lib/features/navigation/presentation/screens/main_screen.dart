@@ -22,9 +22,9 @@ class _MainScreenState extends State<MainScreen> {
         return 0;
       case '/input':
         return 1;
-      case '/review':
-        return 2;
       case '/connect':
+        return 2;
+      case '/review':
         return 3;
       default:
         return 0;
@@ -40,10 +40,10 @@ class _MainScreenState extends State<MainScreen> {
         context.go('/input');
         break;
       case 2:
-        context.go('/review');
+        context.go('/connect');
         break;
       case 3:
-        context.go('/connect');
+        context.go('/review');
         break;
     }
   }

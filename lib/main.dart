@@ -24,12 +24,12 @@ final _router = GoRouter(
           builder: (context, state) => const InputScreen(),
         ),
         GoRoute(
-          path: '/review',
-          builder: (context, state) => const ReviewScreen(),
-        ),
-        GoRoute(
           path: '/connect',
           builder: (context, state) => const ConnectPage(),
+        ),
+        GoRoute(
+          path: '/review',
+          builder: (context, state) => const ReviewScreen(),
         ),
       ],
     ),

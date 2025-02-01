@@ -37,14 +37,14 @@ class BottomNavBar extends StatelessWidget {
         label: 'Track',
       ),
       _buildDestination(
-        icon: Icons.analytics_outlined,
-        selectedIcon: Icons.analytics,
-        label: 'Review',
-      ),
-      _buildDestination(
         icon: Icons.people_outline,
         selectedIcon: Icons.people,
         label: 'Connect',
+      ),
+      _buildDestination(
+        icon: Icons.analytics_outlined,
+        selectedIcon: Icons.analytics,
+        label: 'Review',
       ),
     ];
   }
