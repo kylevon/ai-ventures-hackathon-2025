@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:michro_flutter/features/shared/domain/models/event.dart';
+import 'package:michro_flutter/core/constants/event_types.dart';
 import 'calendar_style_config.dart';
 
 class CalendarWidget extends StatefulWidget {
@@ -147,6 +148,30 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     );
   }
 
+  String _getSymptomExplanation(Event symptomEvent, List<Event> allDayEvents) {
+    // Find food events that happened before the symptom
+    final previousFoodEvents = allDayEvents
+        .where((e) =>
+            e.type == EventType.food && e.date.isBefore(symptomEvent.date))
+        .toList();
+
+    if (symptomEvent.title.toLowerCase().contains('tired') ||
+        symptomEvent.title.toLowerCase().contains('sleepy')) {
+      // Check for sweet foods like croissants
+      final hasSweetFood = previousFoodEvents
+          .any((e) => e.title.toLowerCase().contains('croissant'));
+
+      if (hasSweetFood) {
+        return 'You had a sweet croissant earlier, which likely caused a spike in your blood glucose levels. '
+            'When blood sugar rises quickly and then drops, it can cause fatigue and sleepiness. '
+            'Consider having a more balanced breakfast with protein and fiber to avoid these energy crashes.';
+      }
+    }
+
+    // Default explanation if no specific pattern is found
+    return 'No clear pattern found. Keep tracking your symptoms and meals to identify potential triggers.';
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectedDayEvents = _getEventsForDay(_selectedDay);
@@ -197,20 +222,54 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                   itemCount: selectedDayEvents.length,
                   itemBuilder: (context, index) {
                     final event = selectedDayEvents[index];
-                    return ListTile(
-                      leading: Container(
-                        width: 12,
-                        height: 12,
-                        decoration: BoxDecoration(
-                          color: event.color,
-                          shape: BoxShape.circle,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ListTile(
+                          leading: Container(
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(
+                              color: event.color,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          title: Text(event.title),
+                          subtitle: Text(
+                            '${event.date.hour.toString().padLeft(2, '0')}:${event.date.minute.toString().padLeft(2, '0')}',
+                          ),
+                          onTap: () => widget.onEventTap?.call(event),
                         ),
-                      ),
-                      title: Text(event.title),
-                      subtitle: Text(
-                        '${event.date.hour.toString().padLeft(2, '0')}:${event.date.minute.toString().padLeft(2, '0')}',
-                      ),
-                      onTap: () => widget.onEventTap?.call(event),
+                        if (event.type == EventType.symptoms)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 72, right: 16, bottom: 8),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title:
+                                        Text('Why might this have happened?'),
+                                    content: Text(_getSymptomExplanation(
+                                        event, selectedDayEvents)),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text('Close'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: event.color,
+                                foregroundColor: Colors.white,
+                              ),
+                              child: Text('Explain'),
+                            ),
+                          ),
+                      ],
                     );
                   },
                 ),
