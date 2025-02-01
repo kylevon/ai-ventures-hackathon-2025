@@ -27,9 +27,9 @@ class BottomNavBar extends StatelessWidget {
   List<NavigationDestination> _buildDestinations() {
     return [
       _buildDestination(
-        icon: Icons.calendar_month_outlined,
-        selectedIcon: Icons.calendar_month,
-        label: 'Calendar',
+        icon: Icons.repeat_outlined,
+        selectedIcon: Icons.repeat,
+        label: 'My Habits',
       ),
       _buildDestination(
         icon: Icons.add_circle_outline,

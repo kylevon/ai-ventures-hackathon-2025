@@ -7,7 +7,12 @@ import '../../data/services/mock_event_service.dart';
 import 'package:logging/logging.dart';
 
 class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({super.key});
+  final Function(List<CalendarEvent>)? onEventsChanged;
+
+  const CalendarScreen({
+    super.key,
+    this.onEventsChanged,
+  });
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -33,6 +38,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       final events = _eventService.getCachedEvents();
       if (mounted) {
         setState(() => _events = events);
+        widget.onEventsChanged?.call(events);
         _logger.info('Loaded ${events.length} events from cache');
       }
     } finally {

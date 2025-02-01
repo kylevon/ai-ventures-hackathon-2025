@@ -113,4 +113,8 @@ class MockEventService {
 
     return json;
   }
+
+  Future<List<CalendarEvent>> getEvents() async {
+    return getCachedEvents();
+  }
 }
