@@ -3,6 +3,7 @@ import 'package:logging/logging.dart';
 import '../../domain/models/event.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/event_types.dart';
+import 'dart:math' as math;
 
 class MockServerService {
   static final MockServerService _instance = MockServerService._internal();
@@ -106,8 +107,11 @@ class MockServerService {
   List<Event> _createJanuaryNutritionEvents() {
     final events = <Event>[];
 
-    // Add meal events (existing code)
+    // Add meal events
     events.addAll(_createJanuaryMealEvents());
+
+    // Add medication events
+    events.addAll(_createJanuaryMedicationEvents());
 
     // Add symptom events
     events.addAll(_createJanuarySymptomEvents());
@@ -248,6 +252,39 @@ class MockServerService {
           ),
         );
       }
+    }
+
+    return events;
+  }
+
+  List<Event> _createJanuaryMedicationEvents() {
+    final events = <Event>[];
+    final random = math.Random(42); // Fixed seed for consistent results
+
+    // Create Metformin events for each day in January
+    for (int day = 1; day <= 31; day++) {
+      final date = DateTime(2025, 1, day);
+
+      // Random time between 7:30 AM and 9:00 AM (90 minutes range)
+      final minutesAfter730 = random.nextInt(90); // 0 to 89 minutes
+      final hour = 7 + (minutesAfter730 ~/ 60);
+      final minute = 30 + (minutesAfter730 % 60);
+
+      events.add(
+        Event(
+          id: 'jan-med-$day',
+          title: 'Metformin',
+          description: 'Morning medication - Metformin',
+          date: DateTime(
+            date.year,
+            date.month,
+            date.day,
+            hour,
+            minute,
+          ),
+          type: EventType.pills,
+        ),
+      );
     }
 
     return events;

@@ -154,7 +154,7 @@ class ClockView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Overview of Events - $monthName ${currentMonth.year}',
+            'Your $monthName ${currentMonth.year}',
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 12),
