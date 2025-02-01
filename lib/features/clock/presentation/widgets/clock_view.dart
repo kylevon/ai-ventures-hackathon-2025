@@ -145,13 +145,16 @@ class ClockView extends StatelessWidget {
       eventsByType.putIfAbsent(event.type, () => []).add(event);
     }
 
+    final currentMonth = DateTime.now();
+    final monthName = _getMonthName(currentMonth.month);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Today\'s Activities',
+            'Overview of Events - $monthName ${currentMonth.year}',
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 12),
@@ -188,6 +191,24 @@ class ClockView extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _getMonthName(int month) {
+    return switch (month) {
+      1 => 'January',
+      2 => 'February',
+      3 => 'March',
+      4 => 'April',
+      5 => 'May',
+      6 => 'June',
+      7 => 'July',
+      8 => 'August',
+      9 => 'September',
+      10 => 'October',
+      11 => 'November',
+      12 => 'December',
+      _ => '',
+    };
   }
 
   double _timeToAngle(DateTime time) {
