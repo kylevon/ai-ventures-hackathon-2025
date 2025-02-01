@@ -3,7 +3,6 @@ import '../widgets/calendar_widget.dart';
 import '../../domain/models/calendar_event.dart';
 import '../../data/services/mock_food_service.dart';
 import '../../data/services/food_cache_service.dart';
-import '../../domain/models/food_event.dart';
 import '../widgets/food_event_form.dart';
 
 class CalendarPage extends StatefulWidget {
@@ -63,149 +62,147 @@ class _CalendarPageState extends State<CalendarPage> {
   void _handleEventTap(CalendarEvent event) {
     showDialog(
       context: context,
-      builder: (context) => Dialog(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AppBar(
-              title: const Text('Edit Food Event'),
-              automaticallyImplyLeading: false,
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () async {
-                    final confirmed = await showDialog<bool>(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('Delete Event'),
-                        content: const Text(
-                            'Are you sure you want to delete this event?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(true),
-                            style: TextButton.styleFrom(
-                              foregroundColor:
-                                  Theme.of(context).colorScheme.error,
+      builder: (dialogContext) {
+        final navigator = Navigator.of(dialogContext);
+        final messenger = ScaffoldMessenger.of(dialogContext);
+        return Dialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AppBar(
+                title: const Text('Edit Food Event'),
+                automaticallyImplyLeading: false,
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () async {
+                      final confirmed = await showDialog<bool>(
+                        context: dialogContext,
+                        builder: (confirmContext) => AlertDialog(
+                          title: const Text('Delete Event'),
+                          content: const Text(
+                              'Are you sure you want to delete this event?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () =>
+                                  Navigator.of(confirmContext).pop(false),
+                              child: const Text('Cancel'),
                             ),
-                            child: const Text('Delete'),
-                          ),
-                        ],
-                      ),
-                    );
+                            TextButton(
+                              onPressed: () =>
+                                  Navigator.of(confirmContext).pop(true),
+                              style: TextButton.styleFrom(
+                                foregroundColor:
+                                    Theme.of(confirmContext).colorScheme.error,
+                              ),
+                              child: const Text('Delete'),
+                            ),
+                          ],
+                        ),
+                      );
 
-                    if (confirmed == true && mounted) {
-                      try {
-                        await _foodService.deleteEvent(event.id!);
-                        setState(() {
-                          _events = _cacheService.getAllEvents();
-                        });
-                        if (mounted) {
-                          Navigator.of(context).pop(); // Close the edit dialog
-                          ScaffoldMessenger.of(context).showSnackBar(
+                      if (confirmed == true && mounted) {
+                        try {
+                          await _foodService.deleteEvent(event.id);
+                          setState(() {
+                            _events = _cacheService.getAllEvents();
+                          });
+                          navigator.pop(); // Close the edit dialog
+                          messenger.showSnackBar(
                             const SnackBar(
                                 content: Text('Event deleted successfully')),
                           );
-                        }
-                      } catch (e) {
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
+                        } catch (e) {
+                          messenger.showSnackBar(
                             SnackBar(content: Text('Error deleting event: $e')),
                           );
                         }
                       }
-                    }
-                  },
-                  tooltip: 'Delete event',
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ],
-            ),
-            Expanded(
-              child: FoodEventForm(
-                event: event,
-                selectedDate: event.startDate,
-                onSave: (updatedEvent) async {
-                  try {
-                    await _foodService.updateEvent(updatedEvent);
-                    setState(() {
-                      _events = _cacheService.getAllEvents();
-                    });
-                    if (mounted) {
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
+                    },
+                    tooltip: 'Delete event',
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => navigator.pop(),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: FoodEventForm(
+                  event: event,
+                  selectedDate: event.startDate,
+                  onSave: (updatedEvent) async {
+                    try {
+                      await _foodService.updateEvent(updatedEvent);
+                      setState(() {
+                        _events = _cacheService.getAllEvents();
+                      });
+                      navigator.pop();
+                      messenger.showSnackBar(
                         const SnackBar(
                             content: Text('Event updated successfully')),
                       );
-                    }
-                  } catch (e) {
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                    } catch (e) {
+                      messenger.showSnackBar(
                         SnackBar(content: Text('Error updating event: $e')),
                       );
                     }
-                  }
-                },
+                  },
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 
   void _handleAddEvent(DateTime selectedDay) {
     showDialog(
       context: context,
-      builder: (context) => Dialog(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AppBar(
-              title: const Text('Add Food Event'),
-              automaticallyImplyLeading: false,
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ],
-            ),
-            Expanded(
-              child: FoodEventForm(
-                selectedDate: selectedDay,
-                onSave: (newEvent) async {
-                  try {
-                    await _foodService.addEvent(newEvent);
-                    setState(() {
-                      _events = _cacheService.getAllEvents();
-                    });
-                    if (mounted) {
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
+      builder: (dialogContext) {
+        final navigator = Navigator.of(dialogContext);
+        final messenger = ScaffoldMessenger.of(dialogContext);
+        return Dialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AppBar(
+                title: const Text('Add Food Event'),
+                automaticallyImplyLeading: false,
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => navigator.pop(),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: FoodEventForm(
+                  selectedDate: selectedDay,
+                  onSave: (newEvent) async {
+                    try {
+                      await _foodService.addEvent(newEvent);
+                      setState(() {
+                        _events = _cacheService.getAllEvents();
+                      });
+                      navigator.pop();
+                      messenger.showSnackBar(
                         const SnackBar(
                             content: Text('Event added successfully')),
                       );
-                    }
-                  } catch (e) {
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                    } catch (e) {
+                      messenger.showSnackBar(
                         SnackBar(content: Text('Error adding event: $e')),
                       );
                     }
-                  }
-                },
+                  },
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 
