@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import '../../domain/models/calendar_event.dart';
+import '../../../shared/domain/models/event.dart';
 import 'event_arc.dart';
 
 class ClockView extends StatelessWidget {
-  final List<CalendarEvent> events;
+  final List<Event> events;
   final double radius;
-  final Function(CalendarEvent)? onEventAdded;
-  final Function(CalendarEvent)? onEventUpdated;
+  final Function(Event)? onEventAdded;
+  final Function(Event)? onEventUpdated;
   final Function(String)? onEventDeleted;
 
   const ClockView({
@@ -44,7 +44,6 @@ class ClockView extends StatelessWidget {
             _buildHourMarkers(),
             ...events.map((event) => _buildEventArc(context, event)),
             _buildClockCenter(),
-            _buildCurrentTimeLine(),
           ],
         ),
       ),
@@ -108,7 +107,7 @@ class ClockView extends StatelessWidget {
     );
   }
 
-  Widget _buildEventArc(BuildContext context, CalendarEvent event) {
+  Widget _buildEventArc(BuildContext context, Event event) {
     if (event.startTime == null) return const SizedBox.shrink();
 
     final startAngle = _timeToAngle(event.startTime!);
@@ -116,17 +115,15 @@ class ClockView extends StatelessWidget {
         ? _timeToAngle(event.endTime!)
         : startAngle + (math.pi / 72); // Default to 15-minute duration
 
-    return GestureDetector(
-      onTap: () => _showEventDetails(context, event),
+    return Center(
       child: EventArc(
         radius: radius - 20,
         startAngle: startAngle,
         endAngle: endAngle,
-        color: event.color.withOpacity(0.7),
-        child: Tooltip(
-          message: '${event.title} (${event.timeRange})',
-          child: const SizedBox.shrink(),
-        ),
+        color: event.color,
+        tooltip: '${event.title} (${event.timeRange})',
+        onTap: () => _showEventDetails(context, event),
+        child: const SizedBox.shrink(),
       ),
     );
   }
@@ -144,33 +141,8 @@ class ClockView extends StatelessWidget {
     );
   }
 
-  Widget _buildCurrentTimeLine() {
-    final now = TimeOfDay.now();
-    final angle = _timeToAngle(now);
-
-    return Center(
-      child: Transform.rotate(
-        angle: angle - (math.pi / 2), // Adjust to start from 12 o'clock
-        child: Container(
-          width: radius * 2,
-          height: 2,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.red.withOpacity(0),
-                Colors.red,
-                Colors.red,
-              ],
-              stops: const [0.0, 0.1, 1.0],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildLegend(BuildContext context) {
-    final eventsByType = <EventType, List<CalendarEvent>>{};
+    final eventsByType = <EventType, List<Event>>{};
     for (final event in events) {
       eventsByType.putIfAbsent(event.type, () => []).add(event);
     }
@@ -203,7 +175,7 @@ class ClockView extends StatelessWidget {
   }
 
   Widget _buildLegendItem(
-      BuildContext context, EventType type, List<CalendarEvent> typeEvents) {
+      BuildContext context, EventType type, List<Event> typeEvents) {
     return InkWell(
       onTap: () => _showTypeEvents(context, type, typeEvents),
       child: Padding(
@@ -229,7 +201,7 @@ class ClockView extends StatelessWidget {
     );
   }
 
-  void _showEventDetails(BuildContext context, CalendarEvent event) {
+  void _showEventDetails(BuildContext context, Event event) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -262,7 +234,7 @@ class ClockView extends StatelessWidget {
   }
 
   void _showTypeEvents(
-      BuildContext context, EventType type, List<CalendarEvent> typeEvents) {
+      BuildContext context, EventType type, List<Event> typeEvents) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -308,7 +280,16 @@ class ClockView extends StatelessWidget {
   }
 
   double _timeToAngle(TimeOfDay time) {
+    // Convert time to minutes since midnight (0-1439)
     final minutes = time.hour * 60 + time.minute;
-    return (minutes * math.pi) / 720; // 720 = 12 * 60 minutes
+    // Convert to angle where:
+    // - 0 minutes (midnight) = -π/2 (top of clock)
+    // - 360 minutes (6:00) = 0 (right side of clock)
+    // - 720 minutes (12:00) = π/2 (bottom of clock)
+    // - 1080 minutes (18:00) = π (left side of clock)
+    final angle = (minutes * 2 * math.pi / 1440) - math.pi / 2;
+    print(
+        'Time ${time.hour}:${time.minute.toString().padLeft(2, '0')} -> angle: ${angle * 180 / math.pi}°');
+    return angle;
   }
 }

@@ -43,7 +43,6 @@ class _FoodTrackingPageState extends State<FoodTrackingPage>
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      title: const Text('Food Tracking'),
       bottom: TabBar(
         controller: _tabController,
         tabs: const [

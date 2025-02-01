@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:logging/logging.dart';
-import '../../domain/models/calendar_event.dart';
-import '../../domain/models/food_event.dart';
+import '../../domain/models/event.dart';
 import 'package:flutter/material.dart';
 
 class MockServerService {
@@ -10,7 +9,7 @@ class MockServerService {
   MockServerService._internal();
 
   final _logger = Logger('MockServerService');
-  final List<CalendarEvent> _serverEvents = [];
+  final List<Event> _serverEvents = [];
   bool _isInitialized = false;
   static const _delay = Duration(milliseconds: 500);
 
@@ -44,6 +43,63 @@ class MockServerService {
             "ingredients": ["oats", "banana", "berries", "honey"],
             "mealType": "breakfast"
           }
+        },
+        {
+          "id": "3",
+          "title": "Lunch",
+          "description": "Salad and sandwich",
+          "startDate": DateTime.now().toIso8601String(),
+          "startTime": "12:00",
+          "type": "meal",
+          "metadata": {
+            "calories": 450,
+            "protein": 20,
+            "carbs": 45,
+            "fat": 15,
+            "mealType": "lunch"
+          }
+        },
+        {
+          "id": "4",
+          "title": "Afternoon Walk",
+          "description": "Quick walk around the block",
+          "startDate": DateTime.now().toIso8601String(),
+          "startTime": "15:00",
+          "type": "exercise",
+          "metadata": {"duration": 15, "distance": 1, "calories": 100}
+        },
+        {
+          "id": "5",
+          "title": "Dinner",
+          "description": "Grilled chicken and vegetables",
+          "startDate": DateTime.now().toIso8601String(),
+          "startTime": "18:00",
+          "type": "meal",
+          "metadata": {
+            "calories": 550,
+            "protein": 35,
+            "carbs": 40,
+            "fat": 20,
+            "mealType": "dinner"
+          }
+        },
+        {
+          "id": "6",
+          "title": "Evening Meditation",
+          "description": "Mindfulness practice",
+          "startDate": DateTime.now().toIso8601String(),
+          "startTime": "21:00",
+          "type": "exercise",
+          "metadata": {"duration": 20}
+        },
+        {
+          "id": "7",
+          "title": "Take Medication",
+          "description": "Evening medication",
+          "startDate": DateTime.now().toIso8601String(),
+          "startTime": "22:00",
+          "type": "medication",
+          "metadata": {"dosage": "1 pill"}
         }
       ];
 
@@ -62,53 +118,28 @@ class MockServerService {
     }
   }
 
-  CalendarEvent _parseEvent(Map<String, dynamic> eventData) {
-    EventMetadata? metadata;
+  Event _parseEvent(Map<String, dynamic> eventData) {
+    final metadata = EventMetadata();
+    if (eventData['metadata'] != null) {
+      (eventData['metadata'] as Map<String, dynamic>).forEach((key, value) {
+        metadata.set(key, value);
+      });
+    }
+
     final type = EventType.values.firstWhere(
       (e) => e.name == eventData['type'],
       orElse: () => EventType.custom,
     );
 
-    // Parse metadata based on event type
-    switch (type) {
-      case EventType.meal:
-        metadata = _parseFoodMetadata(eventData['metadata']);
-        break;
-      case EventType.exercise:
-        // TODO: Parse exercise metadata
-        metadata = EventMetadata();
-        break;
-      case EventType.medication:
-        // TODO: Parse medication metadata
-        metadata = EventMetadata();
-        break;
-      default:
-        metadata = EventMetadata();
-    }
-
     final startDate = DateTime.parse(eventData['startDate']);
-    return CalendarEvent(
+    return Event(
       id: eventData['id'],
       title: eventData['title'],
       description: eventData['description'],
-      startDate: startDate,
-      endDate: eventData['endDate'] != null
-          ? DateTime.parse(eventData['endDate'])
-          : startDate.add(const Duration(hours: 1)), // Default 1 hour duration
+      date: startDate,
       startTime: _parseTimeString(eventData['startTime']),
       type: type,
       metadata: metadata,
-    );
-  }
-
-  FoodMetadata _parseFoodMetadata(Map<String, dynamic> metadata) {
-    return FoodMetadata(
-      calories: metadata['calories']?.toDouble(),
-      protein: metadata['protein']?.toDouble(),
-      carbs: metadata['carbs']?.toDouble(),
-      fat: metadata['fat']?.toDouble(),
-      ingredients: List<String>.from(metadata['ingredients'] ?? []),
-      mealType: metadata['mealType'],
     );
   }
 
@@ -121,7 +152,7 @@ class MockServerService {
   }
 
   // GET - Return the static server events
-  Future<List<CalendarEvent>> get(String endpoint) async {
+  Future<List<Event>> get(String endpoint) async {
     await _initializeServerData();
     await Future.delayed(_delay);
     _logger.info('GET request returning ${_serverEvents.length} events');

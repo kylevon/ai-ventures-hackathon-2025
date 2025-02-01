@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../domain/models/calendar_event.dart';
+import '../models/event.dart';
 
 class EventTypeUtils {
   static IconData getEventTypeIcon(EventType type) {

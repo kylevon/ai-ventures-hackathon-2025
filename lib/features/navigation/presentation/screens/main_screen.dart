@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/bottom_nav_bar.dart';
-import '../../../calendar/presentation/screens/calendar_section_screen.dart';
 import '../../../input/presentation/screens/input_screen.dart';
 import '../../../review/presentation/screens/review_screen.dart';
+import '../../../shared/presentation/pages/food_tracking_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -15,7 +15,7 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   static const List<Widget> _screens = [
-    CalendarSectionScreen(),
+    FoodTrackingPage(),
     InputScreen(),
     ReviewScreen(),
   ];

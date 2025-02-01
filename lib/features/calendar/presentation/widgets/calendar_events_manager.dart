@@ -1,36 +1,35 @@
-import '../../domain/models/calendar_event.dart';
-import 'package:logging/logging.dart';
+import 'package:flutter/material.dart';
+import 'package:michro_flutter/features/shared/domain/models/event.dart';
 
-class CalendarEventsManager {
-  final List<CalendarEvent> events;
-  late Map<DateTime, List<CalendarEvent>> _groupedEvents;
-  final _logger = Logger('CalendarEventsManager');
+class CalendarEventsManager extends ChangeNotifier {
+  List<Event> _events = [];
+  bool _isLoading = false;
 
-  CalendarEventsManager(this.events) {
-    _logger.info(
-        'Initializing CalendarEventsManager with ${events.length} events');
-    _groupEvents();
+  List<Event> get events => List.unmodifiable(_events);
+  bool get isLoading => _isLoading;
+
+  void setEvents(List<Event> events) {
+    _events = events;
+    notifyListeners();
   }
 
-  void _groupEvents() {
-    _groupedEvents = {};
-    for (final event in events) {
-      final date = _normalizeDate(event.startDate);
-      if (_groupedEvents[date] == null) _groupedEvents[date] = [];
-      _groupedEvents[date]!.add(event);
-    }
-    _logger.info('Grouped events by date: ${_groupedEvents.length} dates');
+  void setLoading(bool loading) {
+    _isLoading = loading;
+    notifyListeners();
   }
 
-  DateTime _normalizeDate(DateTime date) {
-    return DateTime(date.year, date.month, date.day);
+  void addEvent(Event event) {
+    _events = [..._events, event];
+    notifyListeners();
   }
 
-  List<CalendarEvent> getEventsForDay(DateTime day) {
-    final normalizedDay = _normalizeDate(day);
-    final events = _groupedEvents[normalizedDay] ?? [];
-    _logger.info(
-        'Getting events for ${normalizedDay.toIso8601String()}: ${events.length} events');
-    return events;
+  void updateEvent(Event event) {
+    _events = _events.map((e) => e.id == event.id ? event : e).toList();
+    notifyListeners();
+  }
+
+  void deleteEvent(String id) {
+    _events = _events.where((e) => e.id != id).toList();
+    notifyListeners();
   }
 }

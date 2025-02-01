@@ -1,0 +1,96 @@
+[
+  {
+    "id": "1",
+    "title": "Morning Run",
+    "description": "5km run in the park",
+    "startDate": "2023-12-22T00:00:00.000Z",
+    "startTime": "07:00",
+    "type": "exercise",
+    "metadata": {
+      "duration": 30,
+      "distance": 5,
+      "calories": 300
+    }
+  },
+  {
+    "id": "2",
+    "title": "Breakfast",
+    "description": "Oatmeal with fruits",
+    "startDate": "2023-12-22T00:00:00.000Z",
+    "startTime": "08:00",
+    "type": "meal",
+    "metadata": {
+      "calories": 350,
+      "protein": 12,
+      "carbs": 45,
+      "fat": 8,
+      "ingredients": ["oats", "banana", "berries", "honey"],
+      "mealType": "breakfast"
+    }
+  },
+  {
+    "id": "3",
+    "title": "Lunch",
+    "description": "Salad and sandwich",
+    "startDate": "2023-12-22T00:00:00.000Z",
+    "startTime": "12:00",
+    "type": "meal",
+    "metadata": {
+      "calories": 450,
+      "protein": 20,
+      "carbs": 45,
+      "fat": 15,
+      "mealType": "lunch"
+    }
+  },
+  {
+    "id": "4",
+    "title": "Afternoon Walk",
+    "description": "Quick walk around the block",
+    "startDate": "2023-12-22T00:00:00.000Z",
+    "startTime": "15:00",
+    "type": "exercise",
+    "metadata": {
+      "duration": 15,
+      "distance": 1,
+      "calories": 100
+    }
+  },
+  {
+    "id": "5",
+    "title": "Dinner",
+    "description": "Grilled chicken and vegetables",
+    "startDate": "2023-12-22T00:00:00.000Z",
+    "startTime": "18:00",
+    "type": "meal",
+    "metadata": {
+      "calories": 550,
+      "protein": 35,
+      "carbs": 40,
+      "fat": 20,
+      "mealType": "dinner"
+    }
+  },
+  {
+    "id": "6",
+    "title": "Evening Meditation",
+    "description": "Mindfulness practice",
+    "startDate": "2023-12-22T00:00:00.000Z",
+    "startTime": "21:00",
+    "type": "exercise",
+    "metadata": {
+      "duration": 20
+    }
+  },
+  {
+    "id": "7",
+    "title": "Take Medication",
+    "description": "Evening medication",
+    "startDate": "2023-12-22T00:00:00.000Z",
+    "startTime": "22:00",
+    "type": "medication",
+    "metadata": {
+      "dosage": "1 pill"
+    }
+  }
+] 

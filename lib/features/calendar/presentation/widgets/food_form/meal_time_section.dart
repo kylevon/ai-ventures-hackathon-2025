@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../domain/models/calendar_event.dart';
+import 'package:michro_flutter/features/shared/domain/models/event.dart';
 import 'food_form_fields.dart';
 
 class EventTypeTimeSection extends StatelessWidget {

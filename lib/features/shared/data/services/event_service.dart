@@ -1,19 +1,19 @@
-import '../../domain/models/calendar_event.dart';
-import 'mock_server_service.dart';
 import 'package:logging/logging.dart';
+import '../../domain/models/event.dart';
+import 'mock_server_service.dart';
 
-class MockEventService {
-  static final MockEventService _instance = MockEventService._internal();
-  factory MockEventService() => _instance;
-  MockEventService._internal();
+class EventService {
+  static final EventService _instance = EventService._internal();
+  factory EventService() => _instance;
+  EventService._internal();
 
   final _serverService = MockServerService();
-  final List<CalendarEvent> _cache = [];
+  final List<Event> _cache = [];
   bool _needsSync = true;
-  final _logger = Logger('MockEventService');
+  final _logger = Logger('EventService');
 
   // Fetch events from server and update cache
-  Future<List<CalendarEvent>> fetchEvents() async {
+  Future<List<Event>> fetchEvents() async {
     _logger.info('Fetching events from server...');
     final events = await _serverService.get('/api/events');
     _logger.info('Received ${events.length} events from server');
@@ -22,7 +22,7 @@ class MockEventService {
   }
 
   // Add event locally and send to server
-  Future<CalendarEvent> addEvent(CalendarEvent event) async {
+  Future<Event> addEvent(Event event) async {
     // Generate a simple ID (in a real app, this would come from the server)
     final newEvent = event.copyWith(
       id: 'event-${DateTime.now().millisecondsSinceEpoch}',
@@ -42,7 +42,7 @@ class MockEventService {
   }
 
   // Update event locally and send to server
-  Future<CalendarEvent> updateEvent(CalendarEvent event) async {
+  Future<Event> updateEvent(Event event) async {
     // Update cache immediately
     final index = _cache.indexWhere((e) => e.id == event.id);
     if (index != -1) {
@@ -81,7 +81,7 @@ class MockEventService {
   }
 
   // Get events from cache
-  List<CalendarEvent> getCachedEvents() {
+  List<Event> getCachedEvents() {
     _logger.info('Getting ${_cache.length} events from cache');
     return List.from(_cache);
   }
@@ -90,31 +90,29 @@ class MockEventService {
   bool needsSync() => _needsSync;
 
   // Update cache with new events
-  void _updateCache(List<CalendarEvent> events) {
+  void _updateCache(List<Event> events) {
     _cache.clear();
     _cache.addAll(events);
     _needsSync = false;
     _logger.info('Updated cache with ${events.length} events');
   }
 
-  // Convert event to JSON based on type
-  Map<String, dynamic> _eventToJson(CalendarEvent event) {
-    final Map<String, dynamic> json = {
+  // Convert event to JSON
+  Map<String, dynamic> _eventToJson(Event event) {
+    return {
       'id': event.id,
       'title': event.title,
       'description': event.description,
-      'startDate': event.startDate.toIso8601String(),
+      'startDate': event.date.toIso8601String(),
       'startTime': event.startTime != null
           ? '${event.startTime!.hour}:${event.startTime!.minute}'
           : null,
       'type': event.type.name,
       'metadata': event.metadata.toJson(),
     };
-
-    return json;
   }
 
-  Future<List<CalendarEvent>> getEvents() async {
+  Future<List<Event>> getEvents() async {
     return getCachedEvents();
   }
 }

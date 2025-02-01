@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class SectionNavBar extends StatelessWidget {
+class TopNavBar extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onDestinationSelected;
 
-  const SectionNavBar({
+  const TopNavBar({
     super.key,
     required this.selectedIndex,
     required this.onDestinationSelected,
@@ -12,27 +12,38 @@ class SectionNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationBar(
-      height: 60,
-      selectedIndex: selectedIndex,
-      onDestinationSelected: onDestinationSelected,
-      destinations: const [
-        NavigationDestination(
-          icon: Icon(Icons.calendar_month_outlined),
-          selectedIcon: Icon(Icons.calendar_month),
-          label: 'Calendar',
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        border: Border(
+          bottom: BorderSide(
+            color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+          ),
         ),
-        NavigationDestination(
-          icon: Icon(Icons.access_time_outlined),
-          selectedIcon: Icon(Icons.access_time),
-          label: 'Clock',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.restaurant_menu_outlined),
-          selectedIcon: Icon(Icons.restaurant_menu),
-          label: 'Nutrition',
-        ),
-      ],
+      ),
+      child: TabBar(
+        onTap: onDestinationSelected,
+        tabs: [
+          Tab(
+            icon: Icon(selectedIndex == 0
+                ? Icons.calendar_today
+                : Icons.calendar_today_outlined),
+            text: 'Calendar',
+          ),
+          Tab(
+            icon: Icon(selectedIndex == 1
+                ? Icons.access_time_filled
+                : Icons.access_time_outlined),
+            text: 'Clock',
+          ),
+          Tab(
+            icon: Icon(selectedIndex == 2
+                ? Icons.restaurant_menu
+                : Icons.restaurant_menu_outlined),
+            text: 'Nutrition',
+          ),
+        ],
+      ),
     );
   }
 }

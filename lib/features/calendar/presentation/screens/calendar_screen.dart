@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:michro_flutter/features/shared/domain/models/event.dart';
 import '../widgets/calendar_widget.dart';
-import '../widgets/event_details_dialog.dart';
-import '../widgets/food_event_form.dart';
-import '../../domain/models/calendar_event.dart';
-import '../../data/services/mock_event_service.dart';
-import 'package:logging/logging.dart';
+import '../controllers/calendar_controller.dart';
 
 class CalendarScreen extends StatefulWidget {
-  final Function(List<CalendarEvent>)? onEventsChanged;
+  final Function(List<Event>) onEventsChanged;
 
   const CalendarScreen({
     super.key,
-    this.onEventsChanged,
+    required this.onEventsChanged,
   });
 
   @override
@@ -19,142 +16,81 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  final _eventService = MockEventService();
-  final _logger = Logger('CalendarScreen');
-  List<CalendarEvent> _events = [];
-  bool _isLoading = false;
+  late CalendarController _controller;
+  DateTime _selectedDay = DateTime.now();
+  List<Event> _events = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _controller = CalendarController(
+      onEventsChanged: _handleEventsChanged,
+      onSyncStateChanged: _handleSyncStateChanged,
+    );
     _loadEvents();
   }
 
   Future<void> _loadEvents() async {
-    if (_isLoading) return;
-    _logger.info('Loading events from cache...');
     setState(() => _isLoading = true);
-    try {
-      final events = _eventService.getCachedEvents();
-      if (mounted) {
-        setState(() => _events = events);
-        widget.onEventsChanged?.call(events);
-        _logger.info('Loaded ${events.length} events from cache');
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
-    }
+    await _controller.loadInitialEvents();
+    setState(() => _isLoading = false);
   }
 
-  void _handleEventTap(CalendarEvent event) {
+  void _handleSyncStateChanged(bool isSyncing) {
+    setState(() => _isLoading = isSyncing);
+  }
+
+  void _handleEventsChanged(List<Event> events) {
+    setState(() => _events = events);
+    widget.onEventsChanged(events);
+  }
+
+  void _handleDaySelected(DateTime selectedDay) {
+    setState(() => _selectedDay = selectedDay);
+  }
+
+  void _handleEventTap(Event event) {
+    // TODO: Show event details dialog
+  }
+
+  Future<void> _handleAddEvent() async {
+    // TODO: Show add event dialog
     showDialog(
       context: context,
-      builder: (context) => EventDetailsDialog(
-        event: event,
-        onDelete: () async {
-          _logger.info('Deleting event: ${event.id}');
-          await _eventService.deleteEvent(event.id);
-          if (context.mounted) {
-            Navigator.of(context).pop();
-            await _loadEvents(); // Refresh from cache
-            _logger.info('Event deleted and view refreshed');
-          }
-        },
-        onUpdate: (updatedEvent) async {
-          _logger.info('Updating event: ${event.id}');
-          await _eventService.updateEvent(updatedEvent);
-          if (context.mounted) {
-            Navigator.of(context).pop();
-            await _loadEvents(); // Refresh from cache
-            _logger.info('Event updated and view refreshed');
-          }
-        },
+      builder: (context) => AlertDialog(
+        title: const Text('Add Event'),
+        content: const Text('Event creation dialog will be implemented here'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+        ],
       ),
     );
   }
 
-  void _showAddDialog(DateTime selectedDay) {
-    showDialog<CalendarEvent>(
-      context: context,
-      builder: (context) => Dialog(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(
-                child: FoodEventForm(
-                  selectedDate: selectedDay,
-                  onSave: (newEvent) async {
-                    await _eventService.addEvent(newEvent);
-                    if (context.mounted) {
-                      Navigator.of(context).pop(newEvent);
-                    }
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ).then((newEvent) {
-      if (newEvent != null) {
-        _loadEvents(); // Refresh from cache
-      }
-    });
-  }
-
-  Future<void> _handleSync() async {
-    if (_isLoading) return;
-    _logger.info('Syncing with server...');
-    setState(() => _isLoading = true);
-    try {
-      final events = await _eventService.fetchEvents();
-      if (mounted) {
-        setState(() => _events = events);
-        _logger.info('Synced ${events.length} events from server');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Calendar synced')),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    if (_isLoading && _events.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Stack(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: CalendarWidget(
-            events: _events,
-            onDaySelected: null,
-            onEventTap: _handleEventTap,
-            onAddEvent: _showAddDialog,
-          ),
+        CalendarWidget(
+          events: _events,
+          selectedDay: _selectedDay,
+          onDaySelected: _handleDaySelected,
+          onEventTap: _handleEventTap,
         ),
         Positioned(
           right: 16,
           bottom: 16,
           child: FloatingActionButton(
-            onPressed: _isLoading ? null : _handleSync,
-            tooltip: 'Sync Calendar',
-            child: _isLoading
-                ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
-                : const Icon(Icons.sync),
+            onPressed: _handleAddEvent,
+            child: const Icon(Icons.add),
           ),
         ),
       ],

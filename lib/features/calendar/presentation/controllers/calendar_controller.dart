@@ -1,10 +1,10 @@
-import '../../data/services/mock_event_service.dart';
-import '../../domain/models/calendar_event.dart';
 import 'package:logging/logging.dart';
+import 'package:michro_flutter/features/shared/domain/models/event.dart';
+import 'package:michro_flutter/features/shared/data/services/event_service.dart';
 
 class CalendarController {
-  final _eventService = MockEventService();
-  final Function(List<CalendarEvent>) onEventsChanged;
+  final _eventService = EventService();
+  final Function(List<Event>) onEventsChanged;
   final Function(bool) onSyncStateChanged;
   final _logger = Logger('CalendarController');
 
@@ -38,7 +38,7 @@ class CalendarController {
     }
   }
 
-  Future<CalendarEvent> addEvent(CalendarEvent event) async {
+  Future<Event> addEvent(Event event) async {
     _logger.info('Adding new event: ${event.title}');
     final newEvent = await _eventService.addEvent(event);
     final events = await _eventService.getCachedEvents();
@@ -46,7 +46,7 @@ class CalendarController {
     return newEvent;
   }
 
-  Future<CalendarEvent> updateEvent(CalendarEvent event) async {
+  Future<Event> updateEvent(Event event) async {
     _logger.info('Updating event: ${event.title}');
     final updatedEvent = await _eventService.updateEvent(event);
     final events = await _eventService.getCachedEvents();
@@ -57,8 +57,6 @@ class CalendarController {
   Future<void> deleteEvent(String id) async {
     _logger.info('Deleting event: $id');
     await _eventService.deleteEvent(id);
-
-    // Get updated events list after deletion
     final events = _eventService.getCachedEvents();
     _logger.info('Updated events after deletion: ${events.length} events');
     onEventsChanged(events);
