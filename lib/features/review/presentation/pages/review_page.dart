@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../auth/presentation/theme/auth_theme.dart';
 
 class ReviewPage extends StatelessWidget {
   const ReviewPage({super.key});
@@ -8,7 +9,7 @@ class ReviewPage extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         const SliverAppBar(
-          title: Text('Review'),
+          title: Text('Review Progress'),
           floating: true,
         ),
         SliverFillRemaining(
@@ -17,19 +18,21 @@ class ReviewPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.analytics,
+                  Icons.analytics_outlined,
                   size: 64,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: AuthTheme.primary[500],
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'Review & Analysis',
+                  'Review Progress',
                   style: TextStyle(fontSize: 24),
                 ),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'Coming soon...',
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                  ),
                 ),
               ],
             ),
@@ -38,4 +41,4 @@ class ReviewPage extends StatelessWidget {
       ],
     );
   }
-} 
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../auth/presentation/theme/auth_theme.dart';
 
 class InputPage extends StatelessWidget {
   const InputPage({super.key});
@@ -8,7 +9,7 @@ class InputPage extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         const SliverAppBar(
-          title: Text('Input'),
+          title: Text('Input Data'),
           floating: true,
         ),
         SliverFillRemaining(
@@ -19,7 +20,7 @@ class InputPage extends StatelessWidget {
                 Icon(
                   Icons.add_circle_outline,
                   size: 64,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: AuthTheme.primary[500],
                 ),
                 const SizedBox(height: 16),
                 const Text(
@@ -27,9 +28,11 @@ class InputPage extends StatelessWidget {
                   style: TextStyle(fontSize: 24),
                 ),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'Coming soon...',
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                  ),
                 ),
               ],
             ),
@@ -38,4 +41,4 @@ class InputPage extends StatelessWidget {
       ],
     );
   }
-} 
+}
