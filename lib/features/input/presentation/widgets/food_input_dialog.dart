@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:michro_flutter/features/shared/domain/models/events/food_event.dart';
+import 'package:michro_flutter/screens/food_portion_screen.dart';
 
 class FoodInputDialog extends StatefulWidget {
   final DateTime selectedDate;
@@ -32,7 +33,15 @@ class _FoodInputDialogState extends State<FoodInputDialog> {
       return;
     }
 
-    widget.onSave(_foodDescriptionController.text);
+    // Close the dialog first
+    Navigator.of(context).pop();
+
+    // Navigate to the FoodPortionScreen
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const FoodPortionScreen(),
+      ),
+    );
   }
 
   @override
