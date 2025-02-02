@@ -4,6 +4,7 @@ import '../../domain/models/event.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/event_types.dart';
 import 'dart:math' as math;
+import '../../domain/models/events/exercise_event.dart';
 
 class MockServerService {
   static final MockServerService _instance = MockServerService._internal();
@@ -21,10 +22,12 @@ class MockServerService {
     try {
       // Create events for January and February 2025
       final events = [
-        // February events (existing)
+        // February events
         ..._createFebruaryEvents(),
-        // January events (new)
+        // January events
         ..._createJanuaryNutritionEvents(),
+        // Exercise events
+        ..._createExerciseEvents(),
       ];
 
       _serverEvents.addAll(events);
@@ -357,6 +360,155 @@ class MockServerService {
     }
 
     return events;
+  }
+
+  List<Event> _createExerciseEvents() {
+    return [
+      ExerciseEvent(
+        id: '1',
+        title: 'Morning Walk',
+        description: 'Duration: 30 min • Intensity: Light',
+        date: DateTime(2025, 1, 2, 7, 30),
+        activity: 'Morning Walk',
+        duration: 30,
+        intensity: 'Light',
+      ),
+      ExerciseEvent(
+        id: '2',
+        title: 'Yoga',
+        description: 'Duration: 45 min • Intensity: Moderate',
+        date: DateTime(2025, 1, 3, 8, 0),
+        activity: 'Yoga',
+        duration: 45,
+        intensity: 'Moderate',
+      ),
+      ExerciseEvent(
+        id: '3',
+        title: 'Stretching',
+        description: 'Duration: 20 min • Intensity: Light',
+        date: DateTime(2025, 1, 5, 7, 0),
+        activity: 'Stretching',
+        duration: 20,
+        intensity: 'Light',
+      ),
+      ExerciseEvent(
+        id: '4',
+        title: 'Morning Walk',
+        description: 'Duration: 35 min • Intensity: Moderate',
+        date: DateTime(2025, 1, 8, 7, 30),
+        activity: 'Morning Walk',
+        duration: 35,
+        intensity: 'Moderate',
+      ),
+      ExerciseEvent(
+        id: '5',
+        title: 'Yoga',
+        description: 'Duration: 45 min • Intensity: Moderate',
+        date: DateTime(2025, 1, 10, 8, 0),
+        activity: 'Yoga',
+        duration: 45,
+        intensity: 'Moderate',
+      ),
+      ExerciseEvent(
+        id: '6',
+        title: 'Morning Walk',
+        description: 'Duration: 30 min • Intensity: Light',
+        date: DateTime(2025, 1, 12, 7, 30),
+        activity: 'Morning Walk',
+        duration: 30,
+        intensity: 'Light',
+      ),
+      ExerciseEvent(
+        id: '7',
+        title: 'Stretching',
+        description: 'Duration: 25 min • Intensity: Light',
+        date: DateTime(2025, 1, 15, 7, 0),
+        activity: 'Stretching',
+        duration: 25,
+        intensity: 'Light',
+      ),
+      ExerciseEvent(
+        id: '8',
+        title: 'Yoga',
+        description: 'Duration: 45 min • Intensity: Moderate',
+        date: DateTime(2025, 1, 17, 8, 0),
+        activity: 'Yoga',
+        duration: 45,
+        intensity: 'Moderate',
+      ),
+      ExerciseEvent(
+        id: '9',
+        title: 'Morning Walk',
+        description: 'Duration: 40 min • Intensity: Moderate',
+        date: DateTime(2025, 1, 19, 7, 30),
+        activity: 'Morning Walk',
+        duration: 40,
+        intensity: 'Moderate',
+      ),
+      ExerciseEvent(
+        id: '10',
+        title: 'Stretching',
+        description: 'Duration: 20 min • Intensity: Light',
+        date: DateTime(2025, 1, 22, 7, 0),
+        activity: 'Stretching',
+        duration: 20,
+        intensity: 'Light',
+      ),
+      ExerciseEvent(
+        id: '11',
+        title: 'Yoga',
+        description: 'Duration: 45 min • Intensity: Moderate',
+        date: DateTime(2025, 1, 24, 8, 0),
+        activity: 'Yoga',
+        duration: 45,
+        intensity: 'Moderate',
+      ),
+      ExerciseEvent(
+        id: '12',
+        title: 'Morning Walk',
+        description: 'Duration: 35 min • Intensity: Moderate',
+        date: DateTime(2025, 1, 26, 7, 30),
+        activity: 'Morning Walk',
+        duration: 35,
+        intensity: 'Moderate',
+      ),
+      ExerciseEvent(
+        id: '13',
+        title: 'Stretching',
+        description: 'Duration: 25 min • Intensity: Light',
+        date: DateTime(2025, 1, 29, 7, 0),
+        activity: 'Stretching',
+        duration: 25,
+        intensity: 'Light',
+      ),
+      ExerciseEvent(
+        id: '14',
+        title: 'Yoga',
+        description: 'Duration: 45 min • Intensity: Moderate',
+        date: DateTime(2025, 1, 31, 8, 0),
+        activity: 'Yoga',
+        duration: 45,
+        intensity: 'Moderate',
+      ),
+      ExerciseEvent(
+        id: '15',
+        title: 'Morning Walk',
+        description: 'Duration: 30 min • Intensity: Light',
+        date: DateTime(2025, 2, 1, 7, 30),
+        activity: 'Morning Walk',
+        duration: 30,
+        intensity: 'Light',
+      ),
+      ExerciseEvent(
+        id: '16',
+        title: 'Yoga',
+        description: 'Duration: 45 min • Intensity: Moderate',
+        date: DateTime(2025, 2, 2, 8, 0),
+        activity: 'Yoga',
+        duration: 45,
+        intensity: 'Moderate',
+      ),
+    ];
   }
 
   Event _parseEvent(Map<String, dynamic> eventData) {

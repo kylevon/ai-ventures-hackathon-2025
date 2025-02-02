@@ -4,24 +4,30 @@ import '../event.dart';
 
 class ExerciseEvent extends Event {
   final String activity;
-  final int? duration; // in minutes
-  final double? distance; // in kilometers
-  final int? calories;
-  final String? intensity; // low, medium, high
+  final int duration;
+  final String intensity;
 
   ExerciseEvent({
-    required super.id,
-    required super.title,
-    super.description,
-    required super.date,
+    required String id,
+    required String title,
+    String? description,
+    required DateTime date,
     required this.activity,
-    this.duration,
-    this.distance,
-    this.calories,
-    this.intensity,
-    super.metadata,
-    super.customColor,
-  }) : super(type: EventType.exercise);
+    required this.duration,
+    required this.intensity,
+    Color? customColor,
+  }) : super(
+          id: id,
+          title: title,
+          description: description,
+          date: date,
+          type: EventType.exercise,
+          customColor: customColor,
+        ) {
+    metadata.set('activity', activity);
+    metadata.set('duration', duration);
+    metadata.set('intensity', intensity);
+  }
 
   @override
   Event copyWith({
@@ -32,23 +38,15 @@ class ExerciseEvent extends Event {
     EventType? type,
     EventMetadata? metadata,
     Color? customColor,
-    String? activity,
-    int? duration,
-    double? distance,
-    int? calories,
-    String? intensity,
   }) {
     return ExerciseEvent(
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
       date: date ?? this.date,
-      activity: activity ?? this.activity,
-      duration: duration ?? this.duration,
-      distance: distance ?? this.distance,
-      calories: calories ?? this.calories,
-      intensity: intensity ?? this.intensity,
-      metadata: metadata ?? this.metadata,
+      activity: this.activity,
+      duration: this.duration,
+      intensity: this.intensity,
       customColor: customColor ?? this.customColor,
     );
   }
